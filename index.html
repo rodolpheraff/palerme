@@ -187,6 +187,7 @@ table.px small{display:block;color:var(--ink2);font-size:12px}
 .homepin{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--gold);border:3px solid #fff;box-shadow:0 0 0 3px var(--gold),0 6px 14px rgba(0,0,0,.35);font-size:20px}
 .buspin{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:#fff;border:2.5px solid var(--deep);box-shadow:0 3px 8px rgba(0,0,0,.3);font-size:15px}
 .rpin{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.3);font-size:14px}
+.mpin{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#fff;border:2.5px solid var(--orange);box-shadow:0 3px 8px rgba(0,0,0,.3);font-size:16px}
 .flts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .flt{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font:600 12.5px var(--body);color:var(--ink);cursor:pointer}
 .flt i{width:10px;height:10px;border-radius:50%;background:var(--c)}
@@ -649,18 +650,19 @@ function countVu() {
 
 var DCOL = ["#C24E2C", "#2C5AA0", "#5E7A3A", "#7A3E6B"];
 var flt = LS.get("pa-flt", { d: [1, 1, 1, 1], r: 0 });
+if (flt.m == null) flt.m = 1;
 var BIG = null;
 function viewCarte() {
   return '<div class="fullmap" id="bigmap"></div><div class="maplegend"><b>Palerme en 4 jours</b><div class="flts">' + DAYS.map(function (d, i) {
     return '<button class="flt' + (flt.d[i] ? "" : " off") + '" data-flt="' + i + '" style="--c:' + DCOL[i] + '"><i></i>' + fmtShortDay(d.date) + ' ' + dayNum(d.date) + '</button>';
-  }).join("") + '<button class="flt' + (flt.r ? "" : " off") + '" data-flt="r">🍷 Restos</button></div>' +
-    '<div class="lgx">🏠 logement · 🚌 bus · 🧺 marché · touchez un filtre pour l\'afficher ou le masquer</div></div>';
+  }).join("") + '<button class="flt' + (flt.m ? "" : " off") + '" data-flt="m">🧺 Marchés</button><button class="flt' + (flt.r ? "" : " off") + '" data-flt="r">🍷 Restos</button></div>' +
+    '<div class="lgx">🏠 logement · 🚌 bus · Restos : 🧆 street food · 🍴 midi rapide · 🍝 pâtes · 🍷 bar à vin · 🍕 pizza</div></div>';
 }
 function setFlt(k) {
-  if (k === "r") flt.r = flt.r ? 0 : 1; else flt.d[+k] = flt.d[+k] ? 0 : 1;
+  if (k === "r" || k === "m") flt[k] = flt[k] ? 0 : 1; else flt.d[+k] = flt.d[+k] ? 0 : 1;
   LS.set("pa-flt", flt);
   if (!BIG) return;
-  var on = k === "r" ? flt.r : flt.d[+k], lay = k === "r" ? BIG.r : BIG.d[+k];
+  var on = (k === "r" || k === "m") ? flt[k] : flt.d[+k], lay = k === "r" ? BIG.r : k === "m" ? BIG.mk : BIG.d[+k];
   if (on) BIG.m.addLayer(lay); else BIG.m.removeLayer(lay);
 }
 
@@ -669,6 +671,12 @@ function clearMaps() { maps.forEach(function (m) { m.remove(); }); maps = []; BI
 function tiles(m) {
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(m);
 }
+var MARKETS = [
+  { n: "Marché du Capo", w: "Lun-sam dès 7 h 30, surtout le matin", d: "Le marché du poisson : polpo bollito, oursins, stigghiola.", c: [38.1191, 13.3554], q: "Mercato del Capo Palermo" },
+  { n: "Marché de Ballarò", w: "Lun-sam dès 7 h 30, surtout le matin", d: "Le plus grand et le plus bruyant : panelle, sfincione, grillades.", c: [38.1118, 13.3608], q: "Mercato di Ballarò Palermo" },
+  { n: "Vucciria", w: "Le soir", d: "L'ancien marché devenu le quartier de l'apéro : grillades de rue, stigghiola.", c: [38.1189, 13.3648], q: "Piazza Caracciolo Vucciria Palermo" },
+  { n: "Borgo Vecchio", w: "Le soir", d: "Le plus populaire, derrière le port : barbecues sur le trottoir.", c: [38.1268, 13.3572], q: "Borgo Vecchio Palermo" }
+];
 var RICON = { street: "🧆", midi: "🍴", pates: "🍝", vin: "🍷", pizza: "🍕" };
 function stopLabel(s, n) { return s.t === "mar" ? "🧺" : n; }
 function pin(label, col) {
@@ -703,8 +711,8 @@ function initMiniMap() {
   var n = 0;
   d.stops.forEach(function (s) {
     if (!s.c || s.t === "log") return;
-    n++;
-    L.marker(s.c, { icon: pin(stopLabel(s, n), TAGS[s.t].c) }).addTo(m)
+    if (s.t !== "mar") n++;
+    L.marker(s.c, { icon: s.t === "mar" ? L.divIcon({ className: "", html: '<div class="mpin">🧺</div>', iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -15] }) : pin(n, TAGS[s.t].c) }).addTo(m)
       .bindPopup("<b>" + esc(s.n) + "</b><br><a href='" + stopLink(s) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
     pts.push(s.c);
   });
@@ -718,7 +726,13 @@ function initBigMap() {
   L.control.zoom({ position: "bottomright" }).addTo(m);
   homeMarker(m);
   busMarkers(m);
-  BIG = { m: m, d: [], r: L.layerGroup() };
+  BIG = { m: m, d: [], r: L.layerGroup(), mk: null };
+  BIG.mk = L.layerGroup();
+  MARKETS.forEach(function (k) {
+    L.marker(k.c, { icon: L.divIcon({ className: "", html: '<div class="mpin">🧺</div>', iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -15] }), zIndexOffset: 500 }).addTo(BIG.mk)
+      .bindPopup("<b>" + esc(k.n) + "</b><br>" + esc(k.w) + "<br>" + esc(k.d) + "<br><a href='" + gmapsQ(k.q) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
+  });
+  if (flt.m) BIG.mk.addTo(m);
   RESTOS.forEach(function (r) {
     L.marker(r.c, { icon: L.divIcon({ className: "", html: '<div class="rpin">' + RICON[r.g] + '</div>', iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] }) }).addTo(BIG.r)
       .bindPopup("<b>" + esc(r.n) + "</b><br>" + esc(r.h) + "<br><a href='" + gmapsQ(r.q) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
@@ -727,8 +741,8 @@ function initBigMap() {
   DAYS.forEach(function (d, i) {
     var g = L.layerGroup();
     d.stops.forEach(function (s) {
-      if (!s.c || s.t === "log") return;
-      L.marker(s.c, { icon: pin(stopLabel(s, dayNum(d.date)), DCOL[i]) }).addTo(g)
+      if (!s.c || s.t === "log" || s.t === "mar") return;
+      L.marker(s.c, { icon: pin(dayNum(d.date), DCOL[i]) }).addTo(g)
         .bindPopup("<b>" + esc(s.n) + "</b><br>" + fmtLong(d.date) + "<br><a class='pbtn' href='#' data-goday='" + i + "'>Voir le jour</a>");
     });
     BIG.d.push(g);
