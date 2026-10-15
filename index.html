@@ -170,9 +170,22 @@ table.px small{display:block;color:var(--ink2);font-size:12px}
 .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:2px solid var(--ink)}
 .tot b{font:650 24px var(--disp)}
 
+/* festival */
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 12px 38px;counter-increment:s}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--gold);color:#fff;font:700 13px/26px var(--body);text-align:center}
+.steps li:last-child{padding-bottom:0}
+.when{font:650 12px var(--body);color:var(--gold);text-transform:uppercase;letter-spacing:.06em}
+.buy.plain li{padding-left:0}
+.also{list-style:none;margin:0;padding:0}
+.also li{padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.also li:last-child{border-bottom:0}
+.also b a{color:var(--ink);text-decoration:none}
+.also span{display:block;font-size:12.5px;color:var(--ink2)}
+
 /* nav */
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(4,1fr);background:var(--deep);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -12px rgba(0,0,0,.35)}
-.nav button{background:none;border:0;color:#93A6CB;font:600 11px var(--body);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(5,1fr);background:var(--deep);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -12px rgba(0,0,0,.35)}
+.nav button{background:none;border:0;color:#93A6CB;font:600 10.5px var(--body);white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer}
 .nav svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nav button.on{color:#F7EFE2}
 .nav button.on svg{stroke:var(--gold)}
@@ -233,22 +246,26 @@ var DAYS = [
       { n: "San Giovanni degli Eremiti", t: "mon", d: "À 300 m du palais : coupoles rouges, cloître et jardin d'orangers. 30 min, parfait entre deux grosses visites.", h: "Lun-sam 9 h-19 h · 8 €", q: "San Giovanni degli Eremiti Palermo", c: [38.1097, 13.3536] },
       { n: "Cathédrale & ses toits", t: "mon", d: "Entrée de la cathédrale gratuite. La zone monumentale (trésor, crypte, tombeaux royaux) et surtout la promenade sur les toits sont payantes : vue sur toute la ville.", h: "Toits lun-ven 9 h 30-14 h 30 · billet 1 à 18 € selon le parcours (toits ≈ 7 €)", u: "https://ticket-shop-cattedraledipalermo.it", c: [38.1145, 13.3561] },
       { n: "Marché du Capo", t: "mar", d: "Juste derrière la cathédrale. Déjeuner debout : pane e panelle, sfincione, poulpe bouilli, fruits. Le marché tourne surtout le matin et en début d'après-midi.", q: "Mercato del Capo Palermo", c: [38.1191, 13.3554] },
-      { n: "Lieux du festival", t: "fest", r: 1, d: "Après-midi Vie dei Tesori : 2 ou 3 palais, oratoires ou villas habituellement fermés. Créneaux à réserver en ligne avec le coupon.", u: "https://www.leviedeitesori.com/palermo/", c: [38.1210, 13.3600] },
-      { n: "Oratoires de Serpotta", t: "mon", o: 1, d: "Santa Cita et SS. Rosario in San Domenico : stucs blancs baroques hallucinants. Un billet pour les deux, près de la Vucciria.", h: "9 h-17 h (fermé mardi) · 6 € les deux", q: "Oratorio di Santa Cita Palermo", c: [38.1215, 13.3646] },
+      { n: "Monte di Pietà", t: "fest", r: 1, f: "monte", d: "Festival. Juste au bout du Capo : le somptueux mont-de-piété où les pauvres venaient mettre leurs biens en gage. Créneau vers 14 h, après le déjeuner.", h: "Ven 10 h-15 h · 30 min · 1 entrée de coupon", u: "https://www.leviedeitesori.com/directory-festival/listing/monte-di-pieta-3/", q: "Monte di Pietà Palermo", c: [38.1176, 13.3570] },
+      { n: "Pause au logement", t: "log", d: "Le Qanat House est à 5 min : souffler une heure avant la fin de journée.", q: "Qanat House Palermo", c: P.home },
+      { n: "Palazzo Comitini", t: "fest", r: 1, f: "comitini", d: "Festival. Le plus élégant palais baroque de via Maqueda, sa salle Martorana couverte de fresques, de stucs et de miroirs.", h: "Ven 15 h 30-17 h 30 · 40 min · créneau de 16 h", u: "https://www.leviedeitesori.com/directory-festival/listing/09-palazzo-comitini/", q: "Palazzo Comitini Palermo", c: [38.1137, 13.3613] },
+      { n: "Palazzo Costantino", t: "fest", r: 1, f: "costantino", d: "Festival. Le palais d'angle des Quattro Canti, d'habitude fermé, et sa grande fresque de Velasco. Ouvert tard : idéal à la nuit tombée.", h: "Ven 11 h 30-21 h · 30 min · créneau de 17 h", u: "https://www.leviedeitesori.com/directory-festival/listing/62-palazzo-costantino/", q: "Palazzo Costantino Quattro Canti Palermo", c: [38.1160, 13.3618] },
       { n: "Borgo Vecchio le soir", t: "soir", d: "Le marché populaire derrière le port s'anime le soir : barbecues de rue, musique, très palermitain.", q: "Borgo Vecchio Palermo", c: [38.1268, 13.3572] }
     ],
-    eat: "Le Capo à midi. Le soir, grillades du Borgo Vecchio ou dîner à la Kalsa.",
+    eat: "Le Capo à midi, juste avant le Monte di Pietà. Le soir, grillades du Borgo Vecchio ou dîner à la Kalsa.",
     tip: "Tenue couverte (épaules, genoux) pour la chapelle et la cathédrale. Les billets du Palais en ligne évitent la queue au guichet."
   },
   {
     date: "2026-11-07", t: "Ballarò & les églises", sub: "Monreale en option l'après-midi",
     stops: [
       { n: "Marché de Ballarò", t: "mar", d: "Le plus vieux et le plus vivant des marchés : crieurs, poissons, épices. Y aller le matin, c'est là qu'il bat son plein.", q: "Mercato di Ballarò Palermo", c: [38.1118, 13.3608] },
+      { n: "Crypte de Sant'Orsola", t: "fest", o: 1, f: "orsola", d: "Festival. À deux pas de Ballarò, la crypte de la confrérie de la Mort où Serpotta a sculpté squelettes et allégories. Court et saisissant.", h: "Sam 10 h-17 h 30 · 20 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/34-cripta-delloratorio-della-morte-in-santorsola/", q: "Oratorio della Morte Sant'Orsola Via Maqueda 102 Palermo", c: [38.1135, 13.3612] },
       { n: "La Martorana", t: "mon", d: "Mosaïques byzantines du XIIe siècle, piazza Bellini. Ouverte seulement le matin, et le dimanche uniquement pour la messe : samedi matin, c'est le bon créneau.", h: "Lun-sam 10 h-13 h · 2 €", q: "Chiesa della Martorana Palermo", c: [38.1148, 13.3630] },
       { n: "San Cataldo", t: "mon", d: "Juste à côté : petite église normande aux trois coupoles rouges, intérieur nu de pierre. 15 min.", h: "Tous les jours 9 h-17 h · 2,50 €", q: "Chiesa di San Cataldo Palermo", c: [38.1146, 13.3625] },
       { n: "Santa Caterina & I Segreti del Chiostro", t: "food", d: "Église baroque de marbres polychromes, et dans le couvent la pâtisserie qui refait les douceurs des sœurs : cannoli remplis minute, frutta martorana.", h: "Église 9 h-17 h · 3 €", q: "I Segreti del Chiostro Palermo", c: [38.1153, 13.3627] },
       { n: "Monreale", t: "mon", o: 1, d: "Le Duomo et ses 6 400 m² de mosaïques d'or, le cloître aux 228 colonnes, les terrasses. Y aller : bus AMAT 389 depuis piazza Indipendenza (≈ 40 min, ticket 1,40 €, 1,80 € à bord). La ligne a été coupée plusieurs fois : vérifier sur l'appli MyAMAT la veille, sinon taxi.", h: "Duomo sam 9 h-12 h 45 / 14 h-16 h 45 · cloître jusqu'à 18 h 30 · billet complet 13 €", q: "Duomo di Monreale", c: [38.0815, 13.2924] },
       { n: "Plan B si pas Monreale : la Kalsa", t: "bal", o: 1, d: "Palazzo Abatellis (le « Triomphe de la Mort », 10 €, jusqu'à 19 h), Santa Maria dello Spasimo (église sans toit), puis la terrasse du Palazzo Butera (≈ 10 €) et les remparts du Foro Italico au coucher du soleil.", q: "Palazzo Abatellis Palermo", c: [38.1170, 13.3719] },
+      { n: "Oratoire de San Lorenzo", t: "fest", o: 1, f: "lorenzo", d: "Festival, avec le plan B. Le chef-d'œuvre de Serpotta, et la copie de la Nativité du Caravage volée en 1969 (jamais retrouvée).", h: "Sam 10 h-17 h 30 · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/55-oratorio-di-san-lorenzo/", q: "Oratorio di San Lorenzo Palermo", c: [38.1166, 13.3665] },
       { n: "Opera dei Pupi", t: "soir", o: 1, d: "Spectacle de marionnettes siciliennes (chevaliers de Charlemagne), classé par l'Unesco. Horaires sur les sites du Museo delle Marionette ou du Teatro Cuticchio.", h: "≈ 10 €", q: "Museo internazionale delle Marionette Antonio Pasqualino Palermo", c: [38.1176, 13.3700] }
     ],
     eat: "Midi : pani ca' meusa (pain à la rate) à l'Antica Focacceria San Francesco pour les courageux, sinon arancine. Goûter cannoli à Santa Caterina.",
@@ -262,10 +279,12 @@ var DAYS = [
       ["🚌", "14 h-14 h 30", "Bus Prestia e Comandè vers l'aéroport, arrêt via Roma ou Politeama (≈ 50 min)."],
       ["✈️", "17 h", "Vol retour. Être à l'aéroport vers 15 h 30."]
     ],
-    alert: { h: "Dimanche matin", b: "Chapelle Palatine fermée aux visites pendant la messe, Martorana uniquement pour la messe de 11 h. Garder la matinée pour le festival.", blue: 1 },
+    alert: { h: "Dimanche matin", b: "Chapelle Palatine fermée aux visites pendant la messe, Martorana uniquement pour la messe de 11 h. La matinée est pour les oratoires de Serpotta, ouverts avec le festival.", blue: 1 },
     stops: [
-      { n: "Lieux du festival", t: "fest", r: 1, d: "Les derniers lieux Vie dei Tesori de la liste, 2 ou 3 créneaux entre 9 h et 12 h 30.", u: "https://www.leviedeitesori.com/palermo/", c: [38.1210, 13.3600] },
-      { n: "Catacombes des Capucins", t: "mon", o: 1, d: "8 000 momies habillées alignées dans les couloirs. Saisissant, pas pour tout le monde. Un peu excentré (15 min de taxi).", h: "Tous les jours 9 h-12 h 30 · 5 €", q: "Catacombe dei Cappuccini Palermo", c: [38.1120, 13.3389] },
+      { n: "Oratoire de Santa Cita", t: "fest", r: 1, f: "cita", d: "Festival. Les « Mystères » de Serpotta : murs entiers de stucs blancs, théâtres miniatures et la bataille de Lépante. À 10 min à pied du logement.", h: "Dim 10 h-17 h · 30 min · créneau de 10 h", u: "https://www.leviedeitesori.com/directory-festival/listing/51-oratorio-del-ss-rosario-in-santa-cita/", q: "Oratorio di Santa Cita Palermo", c: [38.1214, 13.3647] },
+      { n: "Oratoire du Rosaire à San Domenico", t: "fest", r: 1, f: "domenico", d: "Festival. 200 m plus loin : stucs de Serpotta et, au-dessus de l'autel, la Vierge du Rosaire de Van Dyck.", h: "Dim 10 h-17 h 30 · 30 min · créneau de 10 h 45", u: "https://www.leviedeitesori.com/directory-festival/listing/52-oratorio-del-ss-rosario-in-san-domenico/", q: "Oratorio del Rosario di San Domenico Palermo", c: [38.1203, 13.3645] },
+      { n: "Palazzo Oneto di Sperlinga", t: "fest", o: 1, f: "oneto", d: "Festival. Demeure du XVIIIe tout juste restaurée, sur le chemin du retour.", h: "Dim 10 h-18 h · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/05-palazzo-oneto/", q: "Palazzo Oneto di Sperlinga Palermo", c: [38.1192, 13.3620] },
+      { n: "Catacombes des Capucins", t: "mon", o: 1, d: "À la place des oratoires si vous préférez : 8 000 momies habillées alignées dans les couloirs. Saisissant, pas pour tout le monde. Excentré (15 min de taxi).", h: "Tous les jours 9 h-12 h 30 · 5 €", q: "Catacombe dei Cappuccini Palermo", c: [38.1120, 13.3389] },
       { n: "Cathédrale (zone monumentale)", t: "mon", o: 1, d: "Si vous ne l'avez pas faite vendredi : ouverte le dimanche 9 h-13 h.", h: "Dim 9 h-13 h", q: "Cattedrale di Palermo", c: [38.1145, 13.3561] },
       { n: "Dernier déjeuner", t: "food", d: "Près du logement pour récupérer les sacs sans courir. Un dernier cannolo, ou une brioche con gelato.", q: "Teatro Massimo Palermo", c: [38.1210, 13.3570] },
       { n: "Bus pour l'aéroport", t: "log", d: "Départ 14 h-14 h 30, arrivée vers 15 h 30.", q: "Piazza Politeama Palermo", c: P.politeama }
@@ -348,13 +367,14 @@ function wxInner(d) {
 var ICON = {
   jour: '<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
   carte: '<svg viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14M15 6v14"/></svg>',
+  fest: '<svg viewBox="0 0 24 24"><path d="M12 3.5l2.4 5 5.4.6-4 3.7 1.1 5.4L12 15.5l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6z"/></svg>',
   billets: '<svg viewBox="0 0 24 24"><path d="M3.5 8a2 2 0 0 0 0 4v0a2 2 0 0 1 0 4V18h17v-2a2 2 0 0 1 0-4 2 2 0 0 1 0-4V6h-17z"/><path d="M14 6v12" stroke-dasharray="2 2.5"/></svg>',
   infos: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.5v.5"/></svg>'
 };
 var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
 function renderNav() {
-  var tabs = [["jour", "Jour par jour"], ["carte", "Carte"], ["billets", "Billets"], ["infos", "Pratique"]];
+  var tabs = [["jour", "Jours"], ["carte", "Carte"], ["fest", "Festival"], ["billets", "Billets"], ["infos", "Pratique"]];
   document.getElementById("nav").innerHTML = tabs.map(function (t) {
     return '<button data-tab="' + t[0] + '" class="' + (st.tab === t[0] ? "on" : "") + '">' + ICON[t[0]] + t[1] + '</button>';
   }).join("");
@@ -411,7 +431,7 @@ function viewDay() {
 
 /* ---- Billets & pass ---- */
 var BUY = [
-  { id: "tesori", n: "Coupon Le Vie dei Tesori (10 entrées)", p: "18 €", d: "Un seul coupon pour vous deux (10 entrées = 5 lieux chacun). Puis réserver les créneaux de ven, sam, dim. Les balades et expériences ont leur propre coupon.", u: "https://www.leviedeitesori.com/palermo/" },
+  { id: "tesori", n: "Coupon Le Vie dei Tesori (10 entrées)", p: "18 €", d: "Un seul coupon pour vous deux (10 entrées = 5 lieux à deux). Ensuite, réserver les 5 créneaux de l'onglet Festival avec le code du coupon.", u: "https://www.leviedeitesori.com/palermo/" },
   { id: "palatina", n: "Palais des Normands + Chapelle Palatine", p: "19 € / pers.", d: "Créneau de vendredi 8 h 30. Billetterie officielle Vivaticket (« Federico II »).", u: "https://federicosecondoonline.tm.vivaticket.com" },
   { id: "bus", n: "Bus aéroport aller-retour", p: "10 € / pers.", d: "Prestia e Comandè en ligne (6,50 € l'aller à bord).", u: "https://www.prestiaecomande.it" },
   { id: "toits", n: "Cathédrale : toits et zone monumentale", p: "≈ 7 €", d: "Facultatif : se prend aussi sur place, mais le billet en ligne évite la queue.", u: "https://ticket-shop-cattedraledipalermo.it" },
@@ -419,9 +439,8 @@ var BUY = [
 ];
 
 var PASSES = [
-  { c: "#5E7A3A", n: "Coupon Le Vie dei Tesori", v: "Oui", d: "Le vrai « pass » de votre week-end : 3 € l'entrée, 10 € les 4, 18 € les 10. Partageable à deux, utilisable en même temps. Ouvre 109 lieux d'habitude fermés (Villino Florio, Monte di Pietà, Casa Professa, Museo della Ceramica Florio, le « Bunkerino » de Falcone et Borsellino…)." },
+  { c: "#5E7A3A", n: "Coupon Le Vie dei Tesori", v: "Oui", d: "Le vrai « pass » de votre week-end : 3 € l'entrée, 10 € les 4, 18 € les 10. Partageable à deux, utilisable en même temps. Une centaine de lieux ouverts pendant votre week-end, dont les oratoires de Serpotta (6 € en temps normal). Détail dans l'onglet Festival." },
   { c: "#C79A2E", n: "Teatro Massimo + Palazzo Butera", v: "Si les deux", d: "Billet combiné 17 € valable 3 jours, au lieu de 12 € + ≈ 10 €. À prendre au Massimo." },
-  { c: "#C79A2E", n: "Oratoires Santa Cita + SS. Rosario", v: "Si oratoires", d: "6 € les deux oratoires de Serpotta (fermés le mardi)." },
   { c: "#7B8794", n: "Circuito del Sacro", v: "Bonus", d: "Réduction de 1 € dans les églises du circuit (Martorana, San Cataldo, Santa Caterina, Casa Professa, Santa Maria della Catena). Demander à la caisse de la première église." },
   { c: "#C24E2C", n: "Palermo Culture Pass", v: "Non", d: "25,60 €, 7 jours, mais seulement Palazzo Steri, musée Salinas, jardin botanique et Palazzo Riso : rien de votre programme." },
   { c: "#C24E2C", n: "PMO Tourist Card", v: "Non", d: "Carte de réductions (Martorana -50 %, cathédrale -17 %, Chapelle Palatine -6 %) avec bus AMAT gratuits. Rentable seulement en enchaînant beaucoup de sites et de bus." },
@@ -459,6 +478,53 @@ function viewBillets() {
     '<p class="small muted" style="margin:8px 0 0">Plus 10 € de bus aéroport et 2,80 € de bus pour Monreale. Sans Monreale : ≈ ' + Math.round(tot - 13) + ' €. Gratuit le 1er dimanche du mois, mais pas le 8 novembre.</p></section>' +
     '<p class="small muted" style="text-align:center;margin:0 0 20px">Horaires et prix : mairie de Palerme (février 2026) et leviedeitesori.com. À revérifier la veille.</p>' +
     '</main>';
+}
+
+var ALSO = [
+  ["Figli d'Arte Cuticchio", "ven-sam 10 h-13 h", "L'atelier du dernier grand maître des pupi, à 2 min du logement.", "figli-darte-cuticchio"],
+  ["Palazzo Branciforte", "sam 10 h-12 h 30", "Ancien mont-de-piété restauré par Gae Aulenti, à côté du logement.", "60-palazzo-branciforte"],
+  ["Oratorio della Carità", "ven-dim 10 h-17 h", "Le petit bijou baroque de Borremans, via Maqueda.", "54-oratorio-della-carita-di-san-pietro-ai-crociferi"],
+  ["Santa Maria in Valverde", "ven-dim 10 h-17 h 30", "Église aux marbres polychromes, à côté de Santa Cita.", "26-chiesa-di-santa-maria-in-valverde"],
+  ["Teatro Finocchiaro", "ven-dim 10 h-17 h 30", "Salle Art nouveau au toit ouvrant, où jouait Totò.", "teatro-finocchiaro"],
+  ["Palazzo Ajutamicristo", "ven-dim 10 h-13 h", "Palais gothique du banquier, et une surprise de Canova.", "58-palazzo-ajutamicristo-raccolta-lapidea"],
+  ["Basilique et cloître de la Magione", "ven-sam 10 h-14 h", "Cathédrale normande bâtie par des artisans arabes.", "04-basilica-e-chiostro-della-magione"],
+  ["Santa Teresa alla Kalsa", "sam-dim 10 h-17 h 30", "Chef-d'œuvre baroque tourné vers la mer.", "chiesa-santa-teresa-alla-kalsa"],
+  ["Palazzo Abatellis, parcours alternatif", "ven-dim", "Les grands peintres siciliens par un autre chemin.", "palazzo-abatellis-percorso-alternativo"],
+  ["Ponte delle Teste Mozze", "ven-dim 10 h-17 h 30", "Trois arches enterrées, disparues depuis un siècle.", "ponte-delle-teste-mozze"],
+  ["Catacombe di Porta d'Ossuna", "sam-dim 10 h-17 h 30", "Nécropole des premiers chrétiens.", "14-catacombe-di-porta-dossuna"],
+  ["Palazzo delle Finanze", "ven-dim", "Les anciennes prisons de la Vicaria.", "palazzo-delle-finanze"],
+  ["Castello di Maredolce", "ven-dim 10 h-13 h", "Château arabe au milieu des immeubles. Excentré.", "13-castello-di-maredolce"]
+];
+function festStops() {
+  var out = [];
+  DAYS.forEach(function (d) { d.stops.forEach(function (s) { if (s.f) out.push({ s: s, d: d }); }); });
+  return out;
+}
+function festItem(x, chk) {
+  var s = x.s;
+  return '<li class="' + (chk && bought["f-" + s.f] ? "done" : "") + '">' + (chk ? '<button class="dot" data-buy="f-' + s.f + '" aria-label="Marquer comme réservé">' + CHECK + '</button>' : '') +
+    '<div class="when">' + fmtLong(x.d.date) + '</div><div class="nm">' + esc(s.n) + '</div>' +
+    '<div class="desc">' + esc(s.d.replace(/^Festival(, avec le plan B)?\. /, "")) + '</div>' +
+    '<div class="hr">🕘 ' + esc(s.h) + '</div>' +
+    '<div class="meta"><a href="' + s.u + '" target="_blank" rel="noopener">' + (chk ? "Réserver le créneau ↗" : "Fiche du lieu ↗") + '</a><a href="' + stopLink(s) + '" target="_blank" rel="noopener">Itinéraire ↗</a></div></li>';
+}
+function viewFest() {
+  var all = festStops(), sel = all.filter(function (x) { return x.s.r; }), bonus = all.filter(function (x) { return !x.s.r; });
+  var nb = sel.filter(function (x) { return bought["f-" + x.s.f]; }).length;
+  return '<div class="ptitle"><h1>Festival</h1><p>Le Vie dei Tesori · votre week-end est le 5e sur 6</p></div><div class="tiles"></div><main class="wrap info">' +
+    '<section class="card rise"><h2>Comment ça marche</h2><ol class="steps">' +
+    '<li><b>Acheter le coupon de 10 entrées (18 €)</b> sur leviedeitesori.com : il arrive par mail avec un QR code. Un seul pour vous deux. Aussi en vente au centre d\'info, via Duca della Verdura 32 (10 h-18 h). Les coupons à 1 entrée (3 €) se vendent aussi à l\'entrée de chaque lieu.</li>' +
+    '<li><b>Réserver chaque créneau</b> sur la fiche du lieu : jour, heure, 2 entrées, puis le code du coupon. Un 2e mail confirme le créneau. Visites de 20 à 40 min, départ toutes les 30 min.</li>' +
+    '<li><b>Le jour J</b>, montrer le mail de réservation à l\'entrée. Sans réservation, on entre seulement s\'il reste de la place.</li></ol>' +
+    '<div class="btns"><a class="btn" href="https://www.leviedeitesori.com/palermo/" target="_blank" rel="noopener">Acheter le coupon ↗</a><a class="btn ghost" href="tel:+390918421273">📞 091 842 12 73</a></div></section>' +
+    '<section class="card rise" style="animation-delay:.05s"><h2>Notre sélection <em id="nbuy">' + nb + ' / ' + sel.length + ' réservé' + (nb > 1 ? "s" : "") + '</em></h2>' +
+    '<p class="small muted" style="margin:0 0 6px">5 lieux à deux = les 10 entrées du coupon. Déjà calés dans les journées.</p><ul class="buy">' + sel.map(function (x) { return festItem(x, 1); }).join("") + '</ul></section>' +
+    '<section class="card rise" style="animation-delay:.1s"><h2>En plus si l\'envie vous prend <em>3 € à l\'entrée</em></h2><ul class="buy plain">' + bonus.map(function (x) { return festItem(x, 0); }).join("") + '</ul></section>' +
+    '<section class="card rise" style="animation-delay:.15s"><h2>Aussi ouverts ce week-end <em>dans le centre</em></h2><ul class="also">' + ALSO.map(function (a) {
+      return '<li><b><a href="https://www.leviedeitesori.com/directory-festival/listing/' + a[3] + '/" target="_blank" rel="noopener">' + esc(a[0]) + ' ↗</a></b> · ' + esc(a[1]) + '<span>' + esc(a[2]) + '</span></li>';
+    }).join("") + '</ul><div class="btns"><a class="btn ghost" href="https://www.leviedeitesori.com/esplora-festival/?filter=1&filtro_citta%5B%5D=34&filtro_tipo_ticket=14" target="_blank" rel="noopener">Les 115 lieux ↗</a></div>' +
+    '<p class="small muted" style="margin:10px 0 0">Balades guidées et expériences (dégustations, ateliers) : coupon à part, sur le même site.</p></section>' +
+    '<p class="small muted" style="text-align:center;margin:0 0 20px">Créneaux relevés sur leviedeitesori.com le 15 octobre 2026.</p></main>';
 }
 
 function viewInfos() {
@@ -538,6 +604,7 @@ function render() {
   var app = document.getElementById("app");
   if (st.tab === "jour") app.innerHTML = viewDay();
   else if (st.tab === "billets") app.innerHTML = viewBillets();
+  else if (st.tab === "fest") app.innerHTML = viewFest();
   else if (st.tab === "infos") app.innerHTML = viewInfos();
   else app.innerHTML = viewCarte();
   renderNav();
@@ -568,8 +635,14 @@ document.addEventListener("click", function (e) {
     if (bought[b]) delete bought[b]; else bought[b] = 1;
     LS.set("pa-buy", bought);
     t.parentNode.classList.toggle("done", !!bought[b]);
-    var nb = BUY.filter(function (x) { return bought[x.id]; }).length;
-    document.getElementById("nbuy").textContent = nb + " / " + BUY.length + " fait" + (nb > 1 ? "s" : "");
+    var el = document.getElementById("nbuy");
+    if (st.tab === "fest") {
+      var nf = festStops().filter(function (x) { return x.s.r; }), ok = nf.filter(function (x) { return bought["f-" + x.s.f]; }).length;
+      el.textContent = ok + " / " + nf.length + " réservé" + (ok > 1 ? "s" : "");
+    } else {
+      var nb = BUY.filter(function (x) { return bought[x.id]; }).length;
+      el.textContent = nb + " / " + BUY.length + " fait" + (nb > 1 ? "s" : "");
+    }
     return;
   }
   if (t.dataset.day != null) { goDay(+t.dataset.day); return; }
