@@ -206,6 +206,15 @@ table.px small{display:block;color:var(--ink2);font-size:12px}
 .rest .row .nm{flex:1}
 .kind{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:#8E2B3A}
 
+/* programme par periode */
+.per{display:flex;align-items:baseline;gap:8px;font:700 11.5px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.per:first-child{margin-top:2px}
+.per em{font:italic 400 13px var(--disp);letter-spacing:0;text-transform:none}
+.lunch{background:#FBEBDD;border:1px solid #EFC9A8;border-radius:14px;padding:10px 12px;margin:0 0 12px}
+.lunch b{font:650 15px var(--disp)}
+.lunch p{margin:4px 0 6px;font-size:14px;color:var(--ink2)}
+.lunch .meta a{font-weight:600;text-decoration:none}
+
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(6,1fr);background:var(--deep);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -12px rgba(0,0,0,.35)}
 .nav button{background:none;border:0;color:#93A6CB;font:600 10px var(--body);white-space:nowrap;padding-left:0;padding-right:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer}
@@ -251,46 +260,46 @@ var DAYS = [
       ["🛏️", "16 h", "Arrivée au Qanat House (terrasse privée), à 3 min du Teatro Massimo."]
     ],
     stops: [
-      { n: "Installation au Qanat House", t: "log", d: "Check-in à partir de 16 h. Profiter de la terrasse pour le coucher du soleil (vers 17 h en novembre).", q: "Qanat House Palermo", c: P.home },
-      { n: "Teatro Massimo", t: "mon", o: 1, d: "Le plus grand opéra d'Italie, à 3 min du logement. Visite guidée de 30 min (salle, loge royale, salle pompéienne), dernier départ 17 h 20 : on peut la caser dès ce soir.", h: "9 h 30-18 h · 12 € (combiné avec Palazzo Butera : 17 €)", q: "Teatro Massimo Palermo", c: P.massimo },
-      { n: "Via Maqueda & Quattro Canti", t: "bal", d: "Rue piétonne qui coupe la vieille ville en deux. Au croisement avec via Vittorio Emanuele, les Quattro Canti et leurs quatre façades baroques.", q: "Quattro Canti Palermo", c: [38.1158, 13.3616] },
-      { n: "Fontana Pretoria", t: "mon", d: "La « fontaine de la honte » et ses statues nues, à deux pas des Quattro Canti. Belle éclairée le soir.", q: "Fontana Pretoria Palermo", c: [38.1151, 13.3624] },
-      { n: "Soirée à la Vucciria", t: "soir", d: "L'ancien marché devenu le quartier de l'apéro : stigghiola et grillades de rue, babbaluci, bières à 2 €, verre de moscato à la Taverna Azzurra. Piazza Caracciolo et les ruelles autour.", q: "Piazza Caracciolo Vucciria Palermo", c: [38.1189, 13.3648] }
+      { n: "Installation au Qanat House", p: "a", t: "log", d: "Check-in à partir de 16 h. Profiter de la terrasse pour le coucher du soleil (vers 17 h en novembre).", q: "Qanat House Palermo", c: P.home },
+      { n: "Teatro Massimo", p: "a", t: "mon", o: 1, d: "Le plus grand opéra d'Italie, à 3 min du logement. Visite guidée de 30 min (salle, loge royale, salle pompéienne), dernier départ 17 h 20 : on peut la caser dès ce soir.", h: "9 h 30-18 h · 12 € (combiné avec Palazzo Butera : 17 €)", q: "Teatro Massimo Palermo", c: P.massimo },
+      { n: "Via Maqueda & Quattro Canti", p: "a", t: "bal", d: "Rue piétonne qui coupe la vieille ville en deux. Au croisement avec via Vittorio Emanuele, les Quattro Canti et leurs quatre façades baroques.", q: "Quattro Canti Palermo", c: [38.1158, 13.3616] },
+      { n: "Fontana Pretoria", p: "a", t: "mon", d: "La « fontaine de la honte » et ses statues nues, à deux pas des Quattro Canti. Belle éclairée le soir.", q: "Fontana Pretoria Palermo", c: [38.1151, 13.3624] },
+      { n: "Soirée à la Vucciria", p: "s", t: "soir", d: "L'ancien marché devenu le quartier de l'apéro : stigghiola et grillades de rue, babbaluci, bières à 2 €, verre de moscato à la Taverna Azzurra. Piazza Caracciolo et les ruelles autour.", q: "Piazza Caracciolo Vucciria Palermo", c: [38.1189, 13.3648] }
     ],
-    z: ["vucciria", "capo"], gout: "Ta première arancina (accarne ou al burro) en arrivant. Le soir à la Vucciria : stigghiola, babbaluci et un verre de moscato.",
+    midi: { h: "≈ 14 h 30", z: ["vucciria"], t: "Déjeuner tardif en descendant du bus, dans la Vucciria : une première arancina (accarne ou al burro), ou une assiette de pâtes dans une cuisine qui sert en continu." },
     tip: "Billet de bus aéroport acheté en ligne : 6 € (aller-retour 10 €) au lieu de 6,50 € à bord. Garder le QR code pour le retour."
   },
   {
     date: "2026-11-06", t: "Les grandes visites", sub: "Palais des Normands, cathédrale",
     alert: { h: "Le jour des grosses visites", b: "Vendredi, moins de monde que le week-end. Palais des Normands à l'ouverture (8 h 30) avant les groupes, puis la cathédrale : ses toits ferment à 14 h 30 en semaine." },
     stops: [
-      { n: "Palais des Normands & Chapelle Palatine", t: "mon", r: 1, d: "La chapelle aux mosaïques d'or byzantines sous un plafond de bois sculpté arabe : le chef-d'œuvre de Palerme. Billet avec les appartements royaux, les jardins et la zone archéologique. Compter 2 h.", h: "Ven 8 h 30-16 h 30 · 19 € · créneau réservé en ligne", u: "https://federicosecondoonline.tm.vivaticket.com", c: [38.1108, 13.3532] },
-      { n: "San Giovanni degli Eremiti", t: "mon", d: "À 300 m du palais : coupoles rouges, cloître et jardin d'orangers. 30 min, parfait entre deux grosses visites.", h: "Lun-sam 9 h-19 h · 8 €", q: "San Giovanni degli Eremiti Palermo", c: [38.1097, 13.3536] },
-      { n: "Cathédrale & ses toits", t: "mon", d: "Entrée de la cathédrale gratuite. La zone monumentale (trésor, crypte, tombeaux royaux) et surtout la promenade sur les toits sont payantes : vue sur toute la ville.", h: "Toits lun-ven 9 h 30-14 h 30 · billet 1 à 18 € selon le parcours (toits ≈ 7 €)", u: "https://ticket-shop-cattedraledipalermo.it", c: [38.1145, 13.3561] },
-      { n: "Marché du Capo", t: "mar", d: "Juste derrière la cathédrale. Déjeuner debout : polpo bollito au citron, pane e panelle, sfincione, stigghiola du grilleur de via Porta Carini. Variante : le pani ca' meusa de Nino u Ballerino, à 5 min. Le marché tourne surtout le matin et en début d'après-midi.", h: "Lun-sam dès 7 h 30, le plus animé le matin", q: "Mercato del Capo Palermo", c: [38.1191, 13.3554] },
-      { n: "Monte di Pietà", t: "fest", r: 1, f: "monte", d: "Festival. Juste au bout du Capo : le somptueux mont-de-piété où les pauvres venaient mettre leurs biens en gage. Créneau vers 14 h, après le déjeuner.", h: "Ven 10 h-15 h · 30 min · 1 entrée de coupon", u: "https://www.leviedeitesori.com/directory-festival/listing/monte-di-pieta-3/", q: "Monte di Pietà Palermo", c: [38.1176, 13.3570] },
-      { n: "Pause au logement", t: "log", d: "Le Qanat House est à 5 min : souffler une heure avant la fin de journée.", q: "Qanat House Palermo", c: P.home },
-      { n: "Palazzo Comitini", t: "fest", r: 1, f: "comitini", d: "Festival. Le plus élégant palais baroque de via Maqueda, sa salle Martorana couverte de fresques, de stucs et de miroirs.", h: "Ven 15 h 30-17 h 30 · 40 min · créneau de 16 h", u: "https://www.leviedeitesori.com/directory-festival/listing/09-palazzo-comitini/", q: "Palazzo Comitini Palermo", c: [38.1137, 13.3613] },
-      { n: "Palazzo Costantino", t: "fest", r: 1, f: "costantino", d: "Festival. Le palais d'angle des Quattro Canti, d'habitude fermé, et sa grande fresque de Velasco. Ouvert tard : idéal à la nuit tombée.", h: "Ven 11 h 30-21 h · 30 min · créneau de 17 h", u: "https://www.leviedeitesori.com/directory-festival/listing/62-palazzo-costantino/", q: "Palazzo Costantino Quattro Canti Palermo", c: [38.1160, 13.3618] },
-      { n: "Borgo Vecchio le soir", t: "soir", d: "Le marché populaire derrière le port s'anime le soir : barbecues de rue, musique, très palermitain.", q: "Borgo Vecchio Palermo", c: [38.1268, 13.3572] }
+      { n: "Palais des Normands & Chapelle Palatine", p: "m", t: "mon", r: 1, d: "La chapelle aux mosaïques d'or byzantines sous un plafond de bois sculpté arabe : le chef-d'œuvre de Palerme. Billet avec les appartements royaux, les jardins et la zone archéologique. Compter 2 h.", h: "Ven 8 h 30-16 h 30 · 19 € · créneau réservé en ligne", u: "https://federicosecondoonline.tm.vivaticket.com", c: [38.1108, 13.3532] },
+      { n: "San Giovanni degli Eremiti", p: "m", t: "mon", d: "À 300 m du palais : coupoles rouges, cloître et jardin d'orangers. 30 min, parfait entre deux grosses visites.", h: "Lun-sam 9 h-19 h · 8 €", q: "San Giovanni degli Eremiti Palermo", c: [38.1097, 13.3536] },
+      { n: "Cathédrale & ses toits", p: "m", t: "mon", d: "Entrée de la cathédrale gratuite. La zone monumentale (trésor, crypte, tombeaux royaux) et surtout la promenade sur les toits sont payantes : vue sur toute la ville.", h: "Toits lun-ven 9 h 30-14 h 30 · billet 1 à 18 € selon le parcours (toits ≈ 7 €)", u: "https://ticket-shop-cattedraledipalermo.it", c: [38.1145, 13.3561] },
+      { n: "Marché du Capo", p: "midi", t: "mar", d: "Juste derrière la cathédrale : le marché du poisson, étals de poulpes et d'oursins, fumée du grilleur de stigghiola de via Porta Carini. Le marché tourne surtout le matin et en début d'après-midi.", h: "Lun-sam dès 7 h 30, le plus animé le matin", q: "Mercato del Capo Palermo", c: [38.1191, 13.3554] },
+      { n: "Monte di Pietà", p: "a", t: "fest", r: 1, f: "monte", d: "Festival. Juste au bout du Capo : le somptueux mont-de-piété où les pauvres venaient mettre leurs biens en gage. Créneau vers 14 h, après le déjeuner.", h: "Ven 10 h-15 h · 30 min · 1 entrée de coupon", u: "https://www.leviedeitesori.com/directory-festival/listing/monte-di-pieta-3/", q: "Monte di Pietà Palermo", c: [38.1176, 13.3570] },
+      { n: "Pause au logement", p: "a", t: "log", d: "Le Qanat House est à 5 min : souffler une heure avant la fin de journée.", q: "Qanat House Palermo", c: P.home },
+      { n: "Palazzo Comitini", p: "a", t: "fest", r: 1, f: "comitini", d: "Festival. Le plus élégant palais baroque de via Maqueda, sa salle Martorana couverte de fresques, de stucs et de miroirs.", h: "Ven 15 h 30-17 h 30 · 40 min · créneau de 16 h", u: "https://www.leviedeitesori.com/directory-festival/listing/09-palazzo-comitini/", q: "Palazzo Comitini Palermo", c: [38.1137, 13.3613] },
+      { n: "Palazzo Costantino", p: "a", t: "fest", r: 1, f: "costantino", d: "Festival. Le palais d'angle des Quattro Canti, d'habitude fermé, et sa grande fresque de Velasco. Ouvert tard : idéal à la nuit tombée.", h: "Ven 11 h 30-21 h · 30 min · créneau de 17 h", u: "https://www.leviedeitesori.com/directory-festival/listing/62-palazzo-costantino/", q: "Palazzo Costantino Quattro Canti Palermo", c: [38.1160, 13.3618] },
+      { n: "Borgo Vecchio le soir", p: "s", t: "soir", d: "Le marché populaire derrière le port s'anime le soir : barbecues de rue, musique, très palermitain.", q: "Borgo Vecchio Palermo", c: [38.1268, 13.3572] }
     ],
-    z: ["capo", "politeama"], gout: "Polpo bollito et pani ca' meusa au Capo, une part de setteveli près du Palais. Le soir, un verre de vin sicilien : nero d'Avola, frappato, Etna.",
+    midi: { h: "≈ 13 h", z: ["capo"], t: "Debout au marché du Capo : polpo bollito au citron, pane e panelle, sfincione. Variante : le pani ca' meusa du quartier, ou une setteveli près du Palais." },
     tip: "Tenue couverte (épaules, genoux) pour la chapelle et la cathédrale. Les billets du Palais en ligne évitent la queue au guichet."
   },
   {
     date: "2026-11-07", t: "Ballarò & les églises", sub: "Monreale en option l'après-midi",
     stops: [
-      { n: "Marché de Ballarò", t: "mar", d: "Le plus vieux et le plus vivant des marchés : crieurs, poissons, épices. Y aller le matin, c'est là qu'il bat son plein.", h: "Lun-sam dès 7 h 30, le plus animé le matin", q: "Mercato di Ballarò Palermo", c: [38.1118, 13.3608] },
-      { n: "Crypte de Sant'Orsola", t: "fest", o: 1, f: "orsola", d: "Festival. À deux pas de Ballarò, la crypte de la confrérie de la Mort où Serpotta a sculpté squelettes et allégories. Court et saisissant.", h: "Sam 10 h-17 h 30 · 20 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/34-cripta-delloratorio-della-morte-in-santorsola/", q: "Oratorio della Morte Sant'Orsola Via Maqueda 102 Palermo", c: [38.1135, 13.3612] },
-      { n: "La Martorana", t: "mon", d: "Mosaïques byzantines du XIIe siècle, piazza Bellini. Ouverte seulement le matin, et le dimanche uniquement pour la messe : samedi matin, c'est le bon créneau.", h: "Lun-sam 10 h-13 h · 2 €", q: "Chiesa della Martorana Palermo", c: [38.1148, 13.3630] },
-      { n: "San Cataldo", t: "mon", d: "Juste à côté : petite église normande aux trois coupoles rouges, intérieur nu de pierre. 15 min.", h: "Tous les jours 9 h-17 h · 2,50 €", q: "Chiesa di San Cataldo Palermo", c: [38.1146, 13.3625] },
-      { n: "Santa Caterina d'Alessandria", t: "mon", d: "Église baroque entièrement couverte de marbres polychromes, cloître et terrasses sur le toit, juste à côté de la Martorana.", h: "Église 9 h-17 h · 3 €", q: "I Segreti del Chiostro Palermo", c: [38.1153, 13.3627] },
-      { n: "Monreale", t: "mon", o: 1, d: "Le Duomo et ses 6 400 m² de mosaïques d'or, le cloître aux 228 colonnes, les terrasses. Y aller : bus AMAT 389 depuis piazza Indipendenza (≈ 40 min, ticket 1,40 €, 1,80 € à bord). La ligne a été coupée plusieurs fois : vérifier sur l'appli MyAMAT la veille, sinon taxi.", h: "Duomo sam 9 h-12 h 45 / 14 h-16 h 45 · cloître jusqu'à 18 h 30 · billet complet 13 €", q: "Duomo di Monreale", c: [38.0815, 13.2924] },
-      { n: "Plan B si pas Monreale : la Kalsa", t: "bal", o: 1, d: "Panelle chez Chiluzzu (piazza della Kalsa), Palazzo Abatellis (le « Triomphe de la Mort », 10 €, jusqu'à 19 h), Santa Maria dello Spasimo (église sans toit), arancina géante au Bar Touring, puis la terrasse du Palazzo Butera (≈ 10 €) et les remparts du Foro Italico au coucher du soleil.", q: "Palazzo Abatellis Palermo", c: [38.1170, 13.3719] },
-      { n: "Oratoire de San Lorenzo", t: "fest", o: 1, f: "lorenzo", d: "Festival, avec le plan B. Le chef-d'œuvre de Serpotta, et la copie de la Nativité du Caravage volée en 1969 (jamais retrouvée).", h: "Sam 10 h-17 h 30 · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/55-oratorio-di-san-lorenzo/", q: "Oratorio di San Lorenzo Palermo", c: [38.1166, 13.3665] },
-      { n: "Opera dei Pupi", t: "soir", o: 1, d: "Spectacle de marionnettes siciliennes (chevaliers de Charlemagne), classé par l'Unesco. Horaires sur les sites du Museo delle Marionette ou du Teatro Cuticchio.", h: "≈ 10 €", q: "Museo internazionale delle Marionette Antonio Pasqualino Palermo", c: [38.1176, 13.3700] }
+      { n: "Marché de Ballarò", p: "m", t: "mar", d: "Le plus vieux et le plus vivant des marchés : crieurs, poissons, épices. Y aller le matin, c'est là qu'il bat son plein.", h: "Lun-sam dès 7 h 30, le plus animé le matin", q: "Mercato di Ballarò Palermo", c: [38.1118, 13.3608] },
+      { n: "Crypte de Sant'Orsola", p: "m", t: "fest", o: 1, f: "orsola", d: "Festival. À deux pas de Ballarò, la crypte de la confrérie de la Mort où Serpotta a sculpté squelettes et allégories. Court et saisissant.", h: "Sam 10 h-17 h 30 · 20 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/34-cripta-delloratorio-della-morte-in-santorsola/", q: "Oratorio della Morte Sant'Orsola Via Maqueda 102 Palermo", c: [38.1135, 13.3612] },
+      { n: "La Martorana", p: "m", t: "mon", d: "Mosaïques byzantines du XIIe siècle, piazza Bellini. Ouverte seulement le matin, et le dimanche uniquement pour la messe : samedi matin, c'est le bon créneau.", h: "Lun-sam 10 h-13 h · 2 €", q: "Chiesa della Martorana Palermo", c: [38.1148, 13.3630] },
+      { n: "San Cataldo", p: "m", t: "mon", d: "Juste à côté : petite église normande aux trois coupoles rouges, intérieur nu de pierre. 15 min.", h: "Tous les jours 9 h-17 h · 2,50 €", q: "Chiesa di San Cataldo Palermo", c: [38.1146, 13.3625] },
+      { n: "Santa Caterina d'Alessandria", p: "m", t: "mon", d: "Église baroque entièrement couverte de marbres polychromes, cloître et terrasses sur le toit, juste à côté de la Martorana.", h: "Église 9 h-17 h · 3 €", q: "I Segreti del Chiostro Palermo", c: [38.1153, 13.3627] },
+      { n: "Monreale", p: "a", t: "mon", o: 1, d: "Le Duomo et ses 6 400 m² de mosaïques d'or, le cloître aux 228 colonnes, les terrasses. Y aller : bus AMAT 389 depuis piazza Indipendenza (≈ 40 min, ticket 1,40 €, 1,80 € à bord). La ligne a été coupée plusieurs fois : vérifier sur l'appli MyAMAT la veille, sinon taxi.", h: "Duomo sam 9 h-12 h 45 / 14 h-16 h 45 · cloître jusqu'à 18 h 30 · billet complet 13 €", q: "Duomo di Monreale", c: [38.0815, 13.2924] },
+      { n: "Plan B si pas Monreale : la Kalsa", p: "a", t: "bal", o: 1, d: "Panelle chez Chiluzzu (piazza della Kalsa), Palazzo Abatellis (le « Triomphe de la Mort », 10 €, jusqu'à 19 h), Santa Maria dello Spasimo (église sans toit), arancina géante au Bar Touring, puis la terrasse du Palazzo Butera (≈ 10 €) et les remparts du Foro Italico au coucher du soleil.", q: "Palazzo Abatellis Palermo", c: [38.1170, 13.3719] },
+      { n: "Oratoire de San Lorenzo", p: "a", t: "fest", o: 1, f: "lorenzo", d: "Festival, avec le plan B. Le chef-d'œuvre de Serpotta, et la copie de la Nativité du Caravage volée en 1969 (jamais retrouvée).", h: "Sam 10 h-17 h 30 · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/55-oratorio-di-san-lorenzo/", q: "Oratorio di San Lorenzo Palermo", c: [38.1166, 13.3665] },
+      { n: "Opera dei Pupi", p: "s", t: "soir", o: 1, d: "Spectacle de marionnettes siciliennes (chevaliers de Charlemagne), classé par l'Unesco. Horaires sur les sites du Museo delle Marionette ou du Teatro Cuticchio.", h: "≈ 10 €", q: "Museo internazionale delle Marionette Antonio Pasqualino Palermo", c: [38.1176, 13.3700] }
     ],
-    z: ["ballaro", "kalsa"], gout: "Pane e panelle et sfincione à Ballarò, un cannolo rempli minute à Santa Caterina, une pizza le soir.",
+    midi: { h: "≈ 13 h", z: ["ballaro", "kalsa"], t: "Street food à Ballarò (panelle, sfincione, grillades) et un cannolo rempli minute à Santa Caterina. Si plan B l'après-midi : les friteries de la Kalsa." },
     tip: "Monreale ou la Kalsa : décider le matin selon la météo et la fatigue. Monreale prend la demi-journée aller-retour."
   },
   {
@@ -303,14 +312,14 @@ var DAYS = [
     ],
     alert: { h: "Dimanche matin", b: "Chapelle Palatine fermée aux visites pendant la messe, Martorana uniquement pour la messe de 11 h. La matinée est pour les oratoires de Serpotta, ouverts avec le festival.", blue: 1 },
     stops: [
-      { n: "Oratoire de Santa Cita", t: "fest", r: 1, f: "cita", d: "Festival. Les « Mystères » de Serpotta : murs entiers de stucs blancs, théâtres miniatures et la bataille de Lépante. À 10 min à pied du logement.", h: "Dim 10 h-17 h · 30 min · créneau de 10 h", u: "https://www.leviedeitesori.com/directory-festival/listing/51-oratorio-del-ss-rosario-in-santa-cita/", q: "Oratorio di Santa Cita Palermo", c: [38.1214, 13.3647] },
-      { n: "Oratoire du Rosaire à San Domenico", t: "fest", r: 1, f: "domenico", d: "Festival. 200 m plus loin : stucs de Serpotta et, au-dessus de l'autel, la Vierge du Rosaire de Van Dyck.", h: "Dim 10 h-17 h 30 · 30 min · créneau de 10 h 45", u: "https://www.leviedeitesori.com/directory-festival/listing/52-oratorio-del-ss-rosario-in-san-domenico/", q: "Oratorio del Rosario di San Domenico Palermo", c: [38.1203, 13.3645] },
-      { n: "Palazzo Oneto di Sperlinga", t: "fest", o: 1, f: "oneto", d: "Festival. Demeure du XVIIIe tout juste restaurée, sur le chemin du retour.", h: "Dim 10 h-18 h · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/05-palazzo-oneto/", q: "Palazzo Oneto di Sperlinga Palermo", c: [38.1192, 13.3620] },
-      { n: "Catacombes des Capucins", t: "mon", o: 1, d: "À la place des oratoires si vous préférez : 8 000 momies habillées alignées dans les couloirs. Saisissant, pas pour tout le monde. Excentré (15 min de taxi).", h: "Tous les jours 9 h-12 h 30 · 5 €", q: "Catacombe dei Cappuccini Palermo", c: [38.1120, 13.3389] },
-      { n: "Cathédrale (zone monumentale)", t: "mon", o: 1, d: "Si vous ne l'avez pas faite vendredi : ouverte le dimanche 9 h-13 h.", h: "Dim 9 h-13 h", q: "Cattedrale di Palermo", c: [38.1145, 13.3561] },
-      { n: "Bus pour l'aéroport", t: "log", d: "Arrêt « Via Roma 289 », devant la Rinascente, à 7 min à pied du logement. Le bus part de la gare à 14 h 30 et passe ici ≈ 5 min après. Guichet sur place jusqu'à 17 h 30.", h: "Passage ≈ 14 h 35 · aéroport ≈ 15 h 20", q: "Rinascente Via Roma 289 Palermo", c: P.busOut }
+      { n: "Oratoire de Santa Cita", p: "m", t: "fest", r: 1, f: "cita", d: "Festival. Les « Mystères » de Serpotta : murs entiers de stucs blancs, théâtres miniatures et la bataille de Lépante. À 10 min à pied du logement.", h: "Dim 10 h-17 h · 30 min · créneau de 10 h", u: "https://www.leviedeitesori.com/directory-festival/listing/51-oratorio-del-ss-rosario-in-santa-cita/", q: "Oratorio di Santa Cita Palermo", c: [38.1214, 13.3647] },
+      { n: "Oratoire du Rosaire à San Domenico", p: "m", t: "fest", r: 1, f: "domenico", d: "Festival. 200 m plus loin : stucs de Serpotta et, au-dessus de l'autel, la Vierge du Rosaire de Van Dyck.", h: "Dim 10 h-17 h 30 · 30 min · créneau de 10 h 45", u: "https://www.leviedeitesori.com/directory-festival/listing/52-oratorio-del-ss-rosario-in-san-domenico/", q: "Oratorio del Rosario di San Domenico Palermo", c: [38.1203, 13.3645] },
+      { n: "Palazzo Oneto di Sperlinga", p: "m", t: "fest", o: 1, f: "oneto", d: "Festival. Demeure du XVIIIe tout juste restaurée, sur le chemin du retour.", h: "Dim 10 h-18 h · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/05-palazzo-oneto/", q: "Palazzo Oneto di Sperlinga Palermo", c: [38.1192, 13.3620] },
+      { n: "Catacombes des Capucins", p: "m", t: "mon", o: 1, d: "À la place des oratoires si vous préférez : 8 000 momies habillées alignées dans les couloirs. Saisissant, pas pour tout le monde. Excentré (15 min de taxi).", h: "Tous les jours 9 h-12 h 30 · 5 €", q: "Catacombe dei Cappuccini Palermo", c: [38.1120, 13.3389] },
+      { n: "Cathédrale (zone monumentale)", p: "m", t: "mon", o: 1, d: "Si vous ne l'avez pas faite vendredi : ouverte le dimanche 9 h-13 h.", h: "Dim 9 h-13 h", q: "Cattedrale di Palermo", c: [38.1145, 13.3561] },
+      { n: "Bus pour l'aéroport", p: "a", t: "log", d: "Arrêt « Via Roma 289 », devant la Rinascente, à 7 min à pied du logement. Le bus part de la gare à 14 h 30 et passe ici ≈ 5 min après. Guichet sur place jusqu'à 17 h 30.", h: "Passage ≈ 14 h 35 · aéroport ≈ 15 h 20", q: "Rinascente Via Roma 289 Palermo", c: P.busOut }
     ],
-    z: ["capo"], gout: "Une timballe de pâtes (anelletti al forno) pour le dernier repas, et une brioche con gelato pour la route.",
+    midi: { h: "12 h 30", z: ["capo"], t: "Près du logement, pour reprendre les sacs vers 14 h : une timballe de pâtes (anelletti al forno), et une brioche con gelato pour la route." },
     tip: "Pas de consigne trouvée chez l'hôte ? Il y a des consignes à bagages en ville (Stow Your Bags, Radical Storage), réservables en ligne."
   }
 ];
@@ -409,8 +418,21 @@ function rail() {
   }).join("") + '</div>';
 }
 
+var PERIODS = [["m", "🌅 Matin"], ["midi", "☀️ Midi"], ["a", "🌇 Après-midi"], ["s", "🌙 Soir"]];
 function stopList(d) {
-  return '<ul class="tl">' + d.stops.map(function (s, k) {
+  return PERIODS.map(function (pr) {
+    var items = [];
+    d.stops.forEach(function (s, k) { if (s.p === pr[0]) items.push(stopItem(d, s, k)); });
+    var lunch = pr[0] === "midi" && d.midi ? lunchBox(d.midi) : "";
+    if (!items.length && !lunch) return "";
+    return '<div class="per">' + pr[1] + (pr[0] === "midi" && d.midi ? ' <em>' + esc(d.midi.h) + '</em>' : '') + '</div>' + lunch + (items.length ? '<ul class="tl">' + items.join("") + '</ul>' : '');
+  }).join("");
+}
+function lunchBox(m) {
+  return '<div class="lunch"><b>🍽️ Déjeuner · ' + m.z.map(function (k) { return esc(ZONES[k].s); }).join(" ou ") + '</b><p>' + esc(m.t) + '</p>' +
+    '<div class="meta">' + m.z.map(function (k) { return '<a href="#" data-zone="' + k + '">Adresses · ' + esc(ZONES[k].s) + ' →</a>'; }).join("") + '</div></div>';
+}
+function stopItem(d, s, k) {
     var id = d.date + "-" + k, tg = TAGS[s.t];
     return '<li class="stop' + (vu[id] ? " done" : "") + '" style="--c:' + tg.c + '">' +
       '<button class="dot" data-vu="' + id + '" aria-label="Marquer comme vu">' + CHECK + '</button>' +
@@ -420,7 +442,6 @@ function stopList(d) {
       (s.h ? '<div class="hr">🕘 ' + esc(s.h) + '</div>' : '') +
       '<div class="meta"><a href="' + stopLink(s) + '" target="_blank" rel="noopener">Itinéraire ↗</a>' + (s.u ? '<a href="' + s.u + '" target="_blank" rel="noopener">Billets ↗</a>' : '') + '</div>' +
       '</li>';
-  }).join("") + '</ul>';
 }
 
 function viewDay() {
@@ -442,10 +463,6 @@ function viewDay() {
       return '<li><span>' + l[0] + '</span><span class="h">' + esc(l[1]) + '</span><span>' + esc(l[2]) + '</span></li>';
     }).join("") + '</ul></section>' : '') +
     '<section class="card rise" style="animation-delay:.1s"><h2>Le programme <em>à cocher une fois vu</em></h2>' + stopList(d) + '</section>' +
-    '<section class="card rise" style="animation-delay:.15s"><h2>Côté assiette</h2><ul class="plan">' +
-    '<li><b>📍 Coin</b><span>' + d.z.map(function (k) { return esc(ZONES[k].n); }).join(" · ") + '</span></li>' +
-    '<li><b>😋 Goûter</b><span>' + esc(d.gout) + '</span></li></ul>' +
-    '<div class="btns">' + d.z.map(function (k) { return '<button class="btn ghost" data-zone="' + k + '">Adresses · ' + esc(ZONES[k].s) + ' →</button>'; }).join("") + '</div></section>' +
     '<section class="card mini rise" style="animation-delay:.18s"><h3>💡 Astuce</h3><p>' + esc(d.tip) + '</p></section>' +
     '<section class="card rise" style="animation-delay:.2s"><h2>Carte du jour</h2><div class="mmap" id="mmap"></div></section>' +
     '<section class="card"><h2>Nos notes</h2><textarea id="note" placeholder="Créneaux réservés, lieux du festival choisis, resto repéré…">' + esc(notes[d.date] || "") + '</textarea></section>' +
@@ -747,6 +764,7 @@ document.addEventListener("click", function (e) {
   var t = e.target.closest("[data-day],[data-goday],[data-tab],[data-vu],[data-buy],[data-flt],[data-zone],#refresh,#resetvu");
   if (!t) return;
   if (t.dataset.zone) {
+    e.preventDefault();
     st.tab = "restos"; LS.set("pa-tab", st.tab); render();
     var zel = document.getElementById("z-" + t.dataset.zone);
     if (zel) zel.scrollIntoView(); else window.scrollTo(0, 0);
