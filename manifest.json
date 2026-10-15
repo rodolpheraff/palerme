@@ -1,0 +1,15 @@
+{
+  "name": "Palerme à deux",
+  "short_name": "Palerme",
+  "description": "Carnet de week-end : programme jour par jour, billets, pass et météo.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5EEE2",
+  "theme_color": "#1C3463",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

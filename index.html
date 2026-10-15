@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1C3463">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Palerme">
+<title>Palerme à deux</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,400;1,9..144,500&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{
+  --paper:#F5EEE2; --card:#FCF8F1; --line:#E6D9C4; --ink:#26211C; --ink2:#665D52;
+  --deep:#1C3463; --blue:#2C5AA0; --terra:#C24E2C; --gold:#C79A2E; --olive:#5E7A3A; --plum:#7A3E6B; --orange:#E07A22;
+  --shadow:0 1px 0 rgba(38,33,28,.04),0 10px 26px -14px rgba(38,33,28,.28);
+  --disp:"Fraunces",Georgia,serif; --body:"Figtree",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+body{padding-bottom:calc(74px + env(safe-area-inset-bottom));min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .36 0 0 0 0 .25 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#app{position:relative;z-index:1}
+button{font:inherit;color:inherit}
+a{color:var(--blue)}
+
+/* rail des jours */
+.rail{position:sticky;top:0;z-index:30;display:flex;gap:8px;overflow-x:auto;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+  background:rgba(245,238,226,.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.chip{flex:1 0 74px;position:relative;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:6px 11px 7px;text-align:left;cursor:pointer;transition:transform .15s}
+.chip:active{transform:scale(.96)}
+.chip b{display:block;font:650 19px/1 var(--disp)}
+.chip span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.chip small{display:block;font-size:11.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip.on{background:var(--deep);border-color:var(--deep);color:#F7EFE2}
+.chip.on span,.chip.on small{color:#B9C6E0}
+.chip.today::after{content:"";position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--terra)}
+
+/* hero : etoiles arabo-normandes */
+.hero{position:relative;overflow:hidden;color:#F7EFE2;padding:22px 20px 70px;
+  background:
+   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%23E2B850' stroke-width='1' opacity='.22'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='4'/%3E%3C/g%3E%3C/svg%3E"),
+   radial-gradient(110% 90% at 100% 0%,#B5532F 0%,transparent 52%),
+   linear-gradient(165deg,#13244A 0%,#1C3463 50%,#2C5AA0 100%)}
+.hero .num{position:absolute;right:-4px;top:-34px;font:650 190px/1 var(--disp);opacity:.09;letter-spacing:-.05em}
+.hero .kick{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.hero h1{font:650 clamp(34px,10vw,56px)/.98 var(--disp);margin:8px 0 6px;letter-spacing:-.02em;max-width:15ch}
+.hero .from{font:italic 400 17px var(--disp);opacity:.9}
+.hero svg{position:absolute;left:0;bottom:-1px;width:100%;height:46px}
+.countdown{display:inline-block;margin-top:12px;background:rgba(247,239,226,.14);border:1px solid rgba(247,239,226,.25);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600}
+
+.wrap{max-width:720px;margin:0 auto;padding:0 14px}
+.lift{margin-top:-54px;position:relative}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0;box-shadow:var(--shadow)}
+.card h2{font:650 21px/1.1 var(--disp);margin:0 0 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.card h2 em{font:italic 400 14px var(--disp);color:var(--ink2)}
+.rise{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.muted{color:var(--ink2)}
+.small{font-size:13px}
+
+/* meteo */
+.wx{display:grid;grid-template-columns:auto 1fr auto;gap:2px 14px;align-items:center}
+.wx .ico{font-size:46px;line-height:1}
+.wx .t{font:650 34px/1 var(--disp)}
+.wx .t small{font:500 17px var(--body);color:var(--ink2)}
+.wx .lbl{color:var(--ink2);font-size:13.5px}
+.wx .where{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink2);text-align:right}
+.stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.stat{background:var(--paper);border-radius:11px;padding:7px 8px;font-size:11.5px;color:var(--ink2);line-height:1.25}
+.stat b{display:block;color:var(--ink);font-size:15px;margin-top:2px}
+
+/* logistique */
+.log{list-style:none;margin:0;padding:0}
+.log li{display:grid;grid-template-columns:28px 64px 1fr;gap:8px;align-items:baseline;padding:7px 0;border-bottom:1px dashed var(--line)}
+.log li:last-child{border-bottom:0}
+.log .h{font:650 15px var(--disp);color:var(--terra)}
+
+.alert{display:flex;gap:12px;background:#FBEBDD;border:1px solid #EFC9A8;border-radius:16px;padding:12px 14px;margin:14px 0;font-size:14px}
+.alert b{display:block}
+.alert.blue{background:#E6EDF7;border-color:#BFD0EA}
+
+/* etapes */
+.tl{list-style:none;margin:0;padding:0}
+.stop{position:relative;padding:0 0 16px 40px}
+.stop::before{content:"";position:absolute;left:13px;top:26px;bottom:2px;border-left:2px dotted var(--line)}
+.stop:last-child::before{display:none}
+.stop:last-child{padding-bottom:2px}
+.dot{position:absolute;left:2px;top:1px;width:24px;height:24px;border-radius:50%;border:2px solid var(--c);background:var(--card);display:grid;place-items:center;cursor:pointer;padding:0}
+.dot svg{width:13px;height:13px;opacity:0}
+.stop.done .dot{background:var(--c)}
+.stop.done .dot svg{opacity:1}
+.stop.done .nm,.stop.done .desc{opacity:.5}
+.nm{font-weight:700;font-size:15.5px;line-height:1.3}
+.tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--c);white-space:nowrap}
+.opt{font-size:10px;text-transform:uppercase;letter-spacing:.08em;border:1px dashed #9A9186;border-radius:6px;padding:0 5px;color:var(--ink2);white-space:nowrap}
+.res{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:#fff;background:var(--terra);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.desc{color:var(--ink2);margin:3px 0 4px;font-size:14px}
+.meta{display:flex;gap:6px 14px;align-items:center;font-size:12.5px;color:var(--ink2);flex-wrap:wrap}
+.meta a{font-weight:600;text-decoration:none}
+.hr{font-size:12.5px;color:var(--ink);background:var(--paper);border-radius:8px;padding:3px 8px;display:inline-block;margin:2px 0 4px}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo .card{margin:0}
+.mini h3{font:650 16px var(--disp);margin:0 0 4px}
+.mini p{margin:0;font-size:14px;color:var(--ink2)}
+
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:9px 15px;background:var(--terra);color:#fff;font-weight:600;font-size:14px;text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.blue{background:var(--deep)}
+
+.mmap{height:240px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#E3E6EC}
+textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:10px 12px;font:16px/1.4 var(--body);color:var(--ink);resize:vertical}
+
+/* carte plein ecran */
+.fullmap{position:fixed;left:0;right:0;top:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:5}
+.maplegend{position:fixed;z-index:500;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));background:rgba(252,248,241,.95);border:1px solid var(--line);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);font-size:13px}
+.maplegend b{font:650 17px var(--disp)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px}
+.lg span{display:inline-flex;align-items:center;gap:5px}
+.lg i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.pin{display:grid;place-items:center;width:28px;height:28px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);background:var(--deep);border:2px solid #F7EFE2;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.pin span{transform:rotate(45deg);color:#F7EFE2;font:700 12px var(--body)}
+.leaflet-popup-content{font:14px/1.4 var(--body);margin:10px 14px}
+.leaflet-popup-content b{font:650 16px var(--disp)}
+.leaflet-container a.pbtn{display:inline-block;margin-top:6px;color:#fff;background:var(--terra);padding:5px 11px;border-radius:999px;text-decoration:none;font-weight:600}
+
+/* page titre */
+.ptitle{padding:calc(26px + env(safe-area-inset-top)) 20px 8px}
+.ptitle h1{font:650 40px/1 var(--disp);margin:0;letter-spacing:-.02em}
+.ptitle p{margin:6px 0 0;color:var(--ink2)}
+.tiles{height:14px;margin:14px 20px 0;opacity:.6;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cg fill='none' stroke='%232C5AA0' stroke-width='1.4'%3E%3Cpath d='M7 1l6 6-6 6-6-6z'/%3E%3Cpath d='M21 1l6 6-6 6-6-6z' stroke='%23C24E2C'/%3E%3C/g%3E%3C/svg%3E") repeat-x}
+
+.info h3{font:650 17px var(--disp);margin:0 0 6px}
+.info ul{margin:0;padding-left:18px}
+.info li{margin:4px 0}
+.info h4{font:650 11.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin:16px 0 6px}
+
+/* billets */
+.buy{list-style:none;margin:0;padding:0}
+.buy li{position:relative;padding:12px 0 12px 40px;border-bottom:1px dashed var(--line)}
+.buy li:last-child{border-bottom:0}
+.buy .dot{top:12px;--c:var(--olive)}
+.buy li.done .dot{background:var(--olive)}
+.buy li.done .dot svg{opacity:1}
+.buy li.done .nm{text-decoration:line-through;opacity:.55}
+.price{font:650 16px var(--disp);color:var(--terra);white-space:nowrap}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.pass{border-left:4px solid var(--c);padding:2px 0 2px 12px;margin:14px 0}
+.pass:first-of-type{margin-top:4px}
+.pass b{font:650 16px var(--disp)}
+.verdict{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:#fff;background:var(--c);border-radius:6px;padding:1px 7px;margin-left:4px;vertical-align:2px}
+.pass p{margin:4px 0 0;font-size:14px;color:var(--ink2)}
+table.px{width:100%;border-collapse:collapse;font-size:14px}
+table.px td{padding:7px 4px;border-bottom:1px dashed var(--line);vertical-align:top}
+table.px tr:last-child td{border-bottom:0}
+table.px td:last-child{text-align:right;white-space:nowrap;font-weight:600}
+table.px small{display:block;color:var(--ink2);font-size:12px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:2px solid var(--ink)}
+.tot b{font:650 24px var(--disp)}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(4,1fr);background:var(--deep);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -12px rgba(0,0,0,.35)}
+.nav button{background:none;border:0;color:#93A6CB;font:600 11px var(--body);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer}
+.nav svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav button.on{color:#F7EFE2}
+.nav button.on svg{stroke:var(--gold)}
+
+@media (min-width:640px){.hero{padding:30px 32px 76px}}
+@media (max-width:380px){.stats{grid-template-columns:repeat(2,1fr)}.duo{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="nav" id="nav"></nav>
+
+<script>
+/* ============ DONNEES ============
+   Horaires et prix : grille officielle de la mairie de Palerme (mise a jour 5 fevr. 2026)
+   + leviedeitesori.com (festival 2026 : 9 oct -> 15 nov, ven-dim). */
+var CITY = [38.1157, 13.3615];
+var P = {
+  apt: [38.1824, 13.0991], via: [38.1186, 13.3638], home: [38.1199, 13.3585], massimo: [38.1203, 13.3573],
+  politeama: [38.1253, 13.3555], indip: [38.1101, 13.3510]
+};
+
+var TAGS = {
+  mon: { l: "Monument", c: "#2C5AA0" },
+  mar: { l: "Marché", c: "#C24E2C" },
+  food: { l: "À goûter", c: "#E07A22" },
+  fest: { l: "Festival", c: "#C79A2E" },
+  bal: { l: "Balade", c: "#5E7A3A" },
+  soir: { l: "Le soir", c: "#7A3E6B" },
+  log: { l: "Logistique", c: "#7B8794" }
+};
+
+var DAYS = [
+  {
+    date: "2026-11-05", t: "Arrivée, Maqueda & Vucciria", sub: "atterrissage 12 h 45",
+    log: [
+      ["✈️", "12 h 45", "Atterrissage à Palerme Falcone-Borsellino (Punta Raisi)."],
+      ["🚌", "≈ 13 h 15", "Bus Prestia e Comandè, devant les arrivées (toutes les 30 min, ≈ 50 min). Descendre via Roma, arrêt Vucciria."],
+      ["🍊", "14 h 30", "Bagages à déposer si l'hôte accepte, sinon déjeuner street food avec les sacs."],
+      ["🛏️", "16 h", "Arrivée au Qanat House (terrasse privée), à 3 min du Teatro Massimo."]
+    ],
+    stops: [
+      { n: "Première arancina", t: "food", d: "En sortant du bus : arancina au ragù ou au beurre, panelle et crocchè. À Palerme on dit « arancina », au féminin.", q: "Ke Palle Arancine d'Autore via Maqueda Palermo", c: [38.1176, 13.3617] },
+      { n: "Installation au Qanat House", t: "log", d: "Check-in à partir de 16 h. Profiter de la terrasse pour le coucher du soleil (vers 17 h en novembre).", q: "Qanat House Palermo", c: P.home },
+      { n: "Teatro Massimo", t: "mon", o: 1, d: "Le plus grand opéra d'Italie, à 3 min du logement. Visite guidée de 30 min (salle, loge royale, salle pompéienne), dernier départ 17 h 20 : on peut la caser dès ce soir.", h: "9 h 30-18 h · 12 € (combiné avec Palazzo Butera : 17 €)", q: "Teatro Massimo Palermo", c: P.massimo },
+      { n: "Via Maqueda & Quattro Canti", t: "bal", d: "Rue piétonne qui coupe la vieille ville en deux. Au croisement avec via Vittorio Emanuele, les Quattro Canti et leurs quatre façades baroques.", q: "Quattro Canti Palermo", c: [38.1158, 13.3616] },
+      { n: "Fontana Pretoria", t: "mon", d: "La « fontaine de la honte » et ses statues nues, à deux pas des Quattro Canti. Belle éclairée le soir.", q: "Fontana Pretoria Palermo", c: [38.1151, 13.3624] },
+      { n: "Soirée à la Vucciria", t: "soir", d: "L'ancien marché devenu le quartier de l'apéro : grillades de rue, bières à 2 €, ambiance jusque tard. Piazza Caracciolo et les ruelles autour.", q: "Piazza Caracciolo Vucciria Palermo", c: [38.1189, 13.3648] }
+    ],
+    eat: "Street food à l'arrivée, puis grillades et spritz à la Vucciria le soir. Pour un vrai dîner assis, réserver dans le quartier du Teatro Massimo.",
+    tip: "Billet de bus aéroport acheté en ligne : 6 € (aller-retour 10 €) au lieu de 6,50 € à bord. Garder le QR code pour le retour."
+  },
+  {
+    date: "2026-11-06", t: "Les grandes visites", sub: "Palais des Normands, cathédrale",
+    alert: { h: "Le jour des grosses visites", b: "Vendredi, moins de monde que le week-end. Palais des Normands à l'ouverture (8 h 30) avant les groupes, puis la cathédrale : ses toits ferment à 14 h 30 en semaine." },
+    stops: [
+      { n: "Palais des Normands & Chapelle Palatine", t: "mon", r: 1, d: "La chapelle aux mosaïques d'or byzantines sous un plafond de bois sculpté arabe : le chef-d'œuvre de Palerme. Billet avec les appartements royaux, les jardins et la zone archéologique. Compter 2 h.", h: "Ven 8 h 30-16 h 30 · 19 € · créneau réservé en ligne", u: "https://federicosecondoonline.tm.vivaticket.com", c: [38.1108, 13.3532] },
+      { n: "San Giovanni degli Eremiti", t: "mon", d: "À 300 m du palais : coupoles rouges, cloître et jardin d'orangers. 30 min, parfait entre deux grosses visites.", h: "Lun-sam 9 h-19 h · 8 €", q: "San Giovanni degli Eremiti Palermo", c: [38.1097, 13.3536] },
+      { n: "Cathédrale & ses toits", t: "mon", d: "Entrée de la cathédrale gratuite. La zone monumentale (trésor, crypte, tombeaux royaux) et surtout la promenade sur les toits sont payantes : vue sur toute la ville.", h: "Toits lun-ven 9 h 30-14 h 30 · billet 1 à 18 € selon le parcours (toits ≈ 7 €)", u: "https://ticket-shop-cattedraledipalermo.it", c: [38.1145, 13.3561] },
+      { n: "Marché du Capo", t: "mar", d: "Juste derrière la cathédrale. Déjeuner debout : pane e panelle, sfincione, poulpe bouilli, fruits. Le marché tourne surtout le matin et en début d'après-midi.", q: "Mercato del Capo Palermo", c: [38.1191, 13.3554] },
+      { n: "Lieux du festival", t: "fest", r: 1, d: "Après-midi Vie dei Tesori : 2 ou 3 palais, oratoires ou villas habituellement fermés. Créneaux à réserver en ligne avec le coupon.", u: "https://www.leviedeitesori.com/palermo/", c: [38.1210, 13.3600] },
+      { n: "Oratoires de Serpotta", t: "mon", o: 1, d: "Santa Cita et SS. Rosario in San Domenico : stucs blancs baroques hallucinants. Un billet pour les deux, près de la Vucciria.", h: "9 h-17 h (fermé mardi) · 6 € les deux", q: "Oratorio di Santa Cita Palermo", c: [38.1215, 13.3646] },
+      { n: "Borgo Vecchio le soir", t: "soir", d: "Le marché populaire derrière le port s'anime le soir : barbecues de rue, musique, très palermitain.", q: "Borgo Vecchio Palermo", c: [38.1268, 13.3572] }
+    ],
+    eat: "Le Capo à midi. Le soir, grillades du Borgo Vecchio ou dîner à la Kalsa.",
+    tip: "Tenue couverte (épaules, genoux) pour la chapelle et la cathédrale. Les billets du Palais en ligne évitent la queue au guichet."
+  },
+  {
+    date: "2026-11-07", t: "Ballarò & les églises", sub: "Monreale en option l'après-midi",
+    stops: [
+      { n: "Marché de Ballarò", t: "mar", d: "Le plus vieux et le plus vivant des marchés : crieurs, poissons, épices. Y aller le matin, c'est là qu'il bat son plein.", q: "Mercato di Ballarò Palermo", c: [38.1118, 13.3608] },
+      { n: "La Martorana", t: "mon", d: "Mosaïques byzantines du XIIe siècle, piazza Bellini. Ouverte seulement le matin, et le dimanche uniquement pour la messe : samedi matin, c'est le bon créneau.", h: "Lun-sam 10 h-13 h · 2 €", q: "Chiesa della Martorana Palermo", c: [38.1148, 13.3630] },
+      { n: "San Cataldo", t: "mon", d: "Juste à côté : petite église normande aux trois coupoles rouges, intérieur nu de pierre. 15 min.", h: "Tous les jours 9 h-17 h · 2,50 €", q: "Chiesa di San Cataldo Palermo", c: [38.1146, 13.3625] },
+      { n: "Santa Caterina & I Segreti del Chiostro", t: "food", d: "Église baroque de marbres polychromes, et dans le couvent la pâtisserie qui refait les douceurs des sœurs : cannoli remplis minute, frutta martorana.", h: "Église 9 h-17 h · 3 €", q: "I Segreti del Chiostro Palermo", c: [38.1153, 13.3627] },
+      { n: "Monreale", t: "mon", o: 1, d: "Le Duomo et ses 6 400 m² de mosaïques d'or, le cloître aux 228 colonnes, les terrasses. Y aller : bus AMAT 389 depuis piazza Indipendenza (≈ 40 min, ticket 1,40 €, 1,80 € à bord). La ligne a été coupée plusieurs fois : vérifier sur l'appli MyAMAT la veille, sinon taxi.", h: "Duomo sam 9 h-12 h 45 / 14 h-16 h 45 · cloître jusqu'à 18 h 30 · billet complet 13 €", q: "Duomo di Monreale", c: [38.0815, 13.2924] },
+      { n: "Plan B si pas Monreale : la Kalsa", t: "bal", o: 1, d: "Palazzo Abatellis (le « Triomphe de la Mort », 10 €, jusqu'à 19 h), Santa Maria dello Spasimo (église sans toit), puis la terrasse du Palazzo Butera (≈ 10 €) et les remparts du Foro Italico au coucher du soleil.", q: "Palazzo Abatellis Palermo", c: [38.1170, 13.3719] },
+      { n: "Opera dei Pupi", t: "soir", o: 1, d: "Spectacle de marionnettes siciliennes (chevaliers de Charlemagne), classé par l'Unesco. Horaires sur les sites du Museo delle Marionette ou du Teatro Cuticchio.", h: "≈ 10 €", q: "Museo internazionale delle Marionette Antonio Pasqualino Palermo", c: [38.1176, 13.3700] }
+    ],
+    eat: "Midi : pani ca' meusa (pain à la rate) à l'Antica Focacceria San Francesco pour les courageux, sinon arancine. Goûter cannoli à Santa Caterina.",
+    tip: "Monreale ou la Kalsa : décider le matin selon la météo et la fatigue. Monreale prend la demi-journée aller-retour."
+  },
+  {
+    date: "2026-11-08", t: "Derniers trésors", sub: "vol à 17 h",
+    last: 1,
+    log: [
+      ["🧳", "avant 10 h", "Départ du logement. Bagages chez l'hôte jusqu'à 14 h (à confirmer avant)."],
+      ["🚌", "14 h-14 h 30", "Bus Prestia e Comandè vers l'aéroport, arrêt via Roma ou Politeama (≈ 50 min)."],
+      ["✈️", "17 h", "Vol retour. Être à l'aéroport vers 15 h 30."]
+    ],
+    alert: { h: "Dimanche matin", b: "Chapelle Palatine fermée aux visites pendant la messe, Martorana uniquement pour la messe de 11 h. Garder la matinée pour le festival.", blue: 1 },
+    stops: [
+      { n: "Lieux du festival", t: "fest", r: 1, d: "Les derniers lieux Vie dei Tesori de la liste, 2 ou 3 créneaux entre 9 h et 12 h 30.", u: "https://www.leviedeitesori.com/palermo/", c: [38.1210, 13.3600] },
+      { n: "Catacombes des Capucins", t: "mon", o: 1, d: "8 000 momies habillées alignées dans les couloirs. Saisissant, pas pour tout le monde. Un peu excentré (15 min de taxi).", h: "Tous les jours 9 h-12 h 30 · 5 €", q: "Catacombe dei Cappuccini Palermo", c: [38.1120, 13.3389] },
+      { n: "Cathédrale (zone monumentale)", t: "mon", o: 1, d: "Si vous ne l'avez pas faite vendredi : ouverte le dimanche 9 h-13 h.", h: "Dim 9 h-13 h", q: "Cattedrale di Palermo", c: [38.1145, 13.3561] },
+      { n: "Dernier déjeuner", t: "food", d: "Près du logement pour récupérer les sacs sans courir. Un dernier cannolo, ou une brioche con gelato.", q: "Teatro Massimo Palermo", c: [38.1210, 13.3570] },
+      { n: "Bus pour l'aéroport", t: "log", d: "Départ 14 h-14 h 30, arrivée vers 15 h 30.", q: "Piazza Politeama Palermo", c: P.politeama }
+    ],
+    eat: "Déjeuner léger près du Teatro Massimo vers 12 h 30, pour reprendre les sacs à 13 h 45.",
+    tip: "Pas de consigne trouvée chez l'hôte ? Il y a des consignes à bagages en ville (Stow Your Bags, Radical Storage), réservables en ligne."
+  }
+];
+
+/* ============ ETAT ============ */
+var LS = {
+  get: function (k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+var st = { tab: LS.get("pa-tab", "jour"), i: LS.get("pa-day", null) };
+var vu = LS.get("pa-vu", {}), notes = LS.get("pa-notes", {}), bought = LS.get("pa-buy", {});
+var WX = LS.get("pa-wx", null);
+var maps = [];
+
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function dObj(s) { return new Date(s + "T12:00:00"); }
+function todayStr() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function fmtLong(s) { return dObj(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }); }
+function fmtShortDay(s) { return dObj(s).toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", ""); }
+function dayNum(s) { return dObj(s).getDate(); }
+function gmapsQ(q) { return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q); }
+function stopLink(s) { return s.q ? gmapsQ(s.q) : gmapsQ(s.n + " Palermo"); }
+
+(function pickDay() {
+  if (st.i != null && st.i < DAYS.length) return;
+  var i = DAYS.findIndex(function (d) { return d.date === todayStr(); });
+  st.i = i < 0 ? 0 : i;
+})();
+
+/* ============ METEO (Open-Meteo, prevision 16 jours) ============ */
+var WMO = function (c) {
+  if (c === 0) return ["☀️", "Grand soleil"];
+  if (c <= 2) return ["🌤️", "Plutôt ensoleillé"];
+  if (c === 3) return ["☁️", "Couvert"];
+  if (c <= 48) return ["🌫️", "Brouillard"];
+  if (c <= 57) return ["🌦️", "Bruine"];
+  if (c <= 67) return ["🌧️", "Pluie"];
+  if (c <= 77) return ["🌨️", "Neige"];
+  if (c <= 82) return ["🌦️", "Averses"];
+  return ["⛈️", "Orage"];
+};
+function loadWx(force) {
+  if (!force && WX && Date.now() - WX.at < 3 * 3600 * 1000) return;
+  var u = "https://api.open-meteo.com/v1/forecast?latitude=" + CITY[0] + "&longitude=" + CITY[1] +
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,sunset&timezone=Europe%2FRome&forecast_days=16";
+  fetch(u).then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); }).then(function (j) {
+    var days = {}, dl = j.daily;
+    dl.time.forEach(function (t, k) {
+      days[t] = { code: dl.weather_code[k], max: dl.temperature_2m_max[k], min: dl.temperature_2m_min[k], rain: dl.precipitation_probability_max[k], wind: dl.wind_speed_10m_max[k], sunset: (dl.sunset[k] || "").slice(11, 16) };
+    });
+    WX = { at: Date.now(), days: days };
+    LS.set("pa-wx", WX);
+    if (st.tab === "jour") { var el = document.getElementById("wx"); if (el) el.innerHTML = wxInner(DAYS[st.i]); }
+    var b = document.getElementById("refresh"); if (b) b.textContent = "↻ Actualiser";
+  }).catch(function () {
+    var b = document.getElementById("refresh"); if (b) b.textContent = "Hors ligne, réessayer";
+  });
+}
+function avail(date) {
+  var d = dObj(date); d.setDate(d.getDate() - 15);
+  return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+}
+function wxInner(d) {
+  var w = WX && WX.days[d.date];
+  if (!w) {
+    return '<div class="wx"><div class="ico">🌤️</div><div><div class="t">≈ 21° <small>/ 14°</small></div><div class="lbl">Normale de début novembre · mer ≈ 21°</div></div><div class="where">Palerme</div>' +
+      '<div class="stats"><div class="stat">Prévision<b>le ' + avail(d.date) + '</b></div><div class="stat">Coucher<b>≈ 17 h</b></div><div class="stat">Pluie<b>2-3 j / sem.</b></div><div class="stat">Tenue<b>pull léger</b></div></div></div>';
+  }
+  var ic = WMO(w.code);
+  return '<div class="wx"><div class="ico">' + ic[0] + '</div><div><div class="t">' + Math.round(w.max) + '° <small>/ ' + Math.round(w.min) + '°</small></div><div class="lbl">' + ic[1] + '</div></div><div class="where">Palerme</div>' +
+    '<div class="stats"><div class="stat">Pluie<b>' + (w.rain || 0) + ' %</b></div><div class="stat">Vent<b>' + Math.round(w.wind) + ' km/h</b></div><div class="stat">Coucher<b>' + w.sunset.replace(":", " h ") + '</b></div><div class="stat">Mis à jour<b>' + new Date(WX.at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) + '</b></div></div></div>';
+}
+
+/* ============ VUES ============ */
+var ICON = {
+  jour: '<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  carte: '<svg viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14M15 6v14"/></svg>',
+  billets: '<svg viewBox="0 0 24 24"><path d="M3.5 8a2 2 0 0 0 0 4v0a2 2 0 0 1 0 4V18h17v-2a2 2 0 0 1 0-4 2 2 0 0 1 0-4V6h-17z"/><path d="M14 6v12" stroke-dasharray="2 2.5"/></svg>',
+  infos: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.5v.5"/></svg>'
+};
+var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+function renderNav() {
+  var tabs = [["jour", "Jour par jour"], ["carte", "Carte"], ["billets", "Billets"], ["infos", "Pratique"]];
+  document.getElementById("nav").innerHTML = tabs.map(function (t) {
+    return '<button data-tab="' + t[0] + '" class="' + (st.tab === t[0] ? "on" : "") + '">' + ICON[t[0]] + t[1] + '</button>';
+  }).join("");
+}
+
+function rail() {
+  var t = todayStr();
+  return '<div class="rail" id="rail">' + DAYS.map(function (d, i) {
+    return '<button class="chip' + (i === st.i ? " on" : "") + (d.date === t ? " today" : "") + '" data-day="' + i + '"><span>' + fmtShortDay(d.date) + '</span> <b>' + dayNum(d.date) + '</b><small>' + esc(d.t) + '</small></button>';
+  }).join("") + '</div>';
+}
+
+function stopList(d) {
+  return '<ul class="tl">' + d.stops.map(function (s, k) {
+    var id = d.date + "-" + k, tg = TAGS[s.t];
+    return '<li class="stop' + (vu[id] ? " done" : "") + '" style="--c:' + tg.c + '">' +
+      '<button class="dot" data-vu="' + id + '" aria-label="Marquer comme vu">' + CHECK + '</button>' +
+      '<div class="nm">' + esc(s.n) + '</div>' +
+      '<div class="meta" style="margin-top:2px"><span class="tag">' + tg.l + '</span>' + (s.r ? '<span class="res">À réserver</span>' : '') + (s.o ? '<span class="opt">Option</span>' : '') + '</div>' +
+      '<div class="desc">' + esc(s.d) + '</div>' +
+      (s.h ? '<div class="hr">🕘 ' + esc(s.h) + '</div>' : '') +
+      '<div class="meta"><a href="' + stopLink(s) + '" target="_blank" rel="noopener">Itinéraire ↗</a>' + (s.u ? '<a href="' + s.u + '" target="_blank" rel="noopener">Billets ↗</a>' : '') + '</div>' +
+      '</li>';
+  }).join("") + '</ul>';
+}
+
+function viewDay() {
+  var d = DAYS[st.i], t = todayStr(), cd = "";
+  var diff = Math.round((dObj(DAYS[0].date) - dObj(t)) / 86400000);
+  if (diff > 0) cd = '<div class="countdown">✈️ Départ dans ' + diff + ' jour' + (diff > 1 ? "s" : "") + '</div>';
+  else if (d.date === t) cd = '<div class="countdown">📍 Aujourd\'hui</div>';
+
+  return rail() +
+    '<header class="hero"><div class="num">' + (st.i + 1) + '</div>' +
+    '<div class="kick">Jour ' + (st.i + 1) + ' · ' + fmtLong(d.date) + '</div>' +
+    '<h1>' + esc(d.t) + '</h1><div class="from">' + esc(d.sub) + '</div>' + cd +
+    '<svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 22 C60 4 120 40 200 22 S340 6 400 22 V46 H0Z" fill="#F5EEE2" opacity=".35"/><path d="M0 30 C70 16 130 44 210 30 S350 18 400 30 V46 H0Z" fill="#F5EEE2"/></svg>' +
+    '</header>' +
+    '<main class="wrap">' +
+    '<section class="card lift rise" id="wx">' + wxInner(d) + '</section>' +
+    (d.alert ? '<div class="alert rise' + (d.alert.blue ? " blue" : "") + '"><div>' + (d.alert.blue ? "⛪" : "🏛️") + '</div><div><b>' + esc(d.alert.h) + '</b>' + esc(d.alert.b) + '</div></div>' : '') +
+    (d.log ? '<section class="card rise" style="animation-delay:.05s"><h2>' + (d.last ? "Le départ" : "L'arrivée") + ' <em>horaires</em></h2><ul class="log">' + d.log.map(function (l) {
+      return '<li><span>' + l[0] + '</span><span class="h">' + esc(l[1]) + '</span><span>' + esc(l[2]) + '</span></li>';
+    }).join("") + '</ul></section>' : '') +
+    '<section class="card rise" style="animation-delay:.1s"><h2>Le programme <em>à cocher une fois vu</em></h2>' + stopList(d) + '</section>' +
+    '<div class="duo rise" style="animation-delay:.15s"><div class="card mini"><h3>🍽️ Manger</h3><p>' + esc(d.eat) + '</p></div><div class="card mini"><h3>💡 Astuce</h3><p>' + esc(d.tip) + '</p></div></div>' +
+    '<section class="card rise" style="animation-delay:.2s"><h2>Carte du jour</h2><div class="mmap" id="mmap"></div></section>' +
+    '<section class="card"><h2>Nos notes</h2><textarea id="note" placeholder="Créneaux réservés, lieux du festival choisis, resto repéré…">' + esc(notes[d.date] || "") + '</textarea></section>' +
+    '<div class="btns" style="justify-content:space-between;margin:4px 0 20px">' +
+    (st.i > 0 ? '<button class="btn ghost" data-day="' + (st.i - 1) + '">← ' + fmtShortDay(DAYS[st.i - 1].date) + ' ' + dayNum(DAYS[st.i - 1].date) + '</button>' : '<span></span>') +
+    (st.i < DAYS.length - 1 ? '<button class="btn ghost" data-day="' + (st.i + 1) + '">' + fmtShortDay(DAYS[st.i + 1].date) + ' ' + dayNum(DAYS[st.i + 1].date) + ' →</button>' : '') +
+    '</div></main>';
+}
+
+/* ---- Billets & pass ---- */
+var BUY = [
+  { id: "tesori", n: "Coupon Le Vie dei Tesori (10 entrées)", p: "18 €", d: "Un seul coupon pour vous deux (10 entrées = 5 lieux chacun). Puis réserver les créneaux de ven, sam, dim. Les balades et expériences ont leur propre coupon.", u: "https://www.leviedeitesori.com/palermo/" },
+  { id: "palatina", n: "Palais des Normands + Chapelle Palatine", p: "19 € / pers.", d: "Créneau de vendredi 8 h 30. Billetterie officielle Vivaticket (« Federico II »).", u: "https://federicosecondoonline.tm.vivaticket.com" },
+  { id: "bus", n: "Bus aéroport aller-retour", p: "10 € / pers.", d: "Prestia e Comandè en ligne (6,50 € l'aller à bord).", u: "https://www.prestiaecomande.it" },
+  { id: "toits", n: "Cathédrale : toits et zone monumentale", p: "≈ 7 €", d: "Facultatif : se prend aussi sur place, mais le billet en ligne évite la queue.", u: "https://ticket-shop-cattedraledipalermo.it" },
+  { id: "hote", n: "Demander à l'hôte", p: "", d: "Dépôt des bagages jeudi avant 16 h, et garde des sacs dimanche de 10 h à 14 h." }
+];
+
+var PASSES = [
+  { c: "#5E7A3A", n: "Coupon Le Vie dei Tesori", v: "Oui", d: "Le vrai « pass » de votre week-end : 3 € l'entrée, 10 € les 4, 18 € les 10. Partageable à deux, utilisable en même temps. Ouvre 109 lieux d'habitude fermés (Villino Florio, Monte di Pietà, Casa Professa, Museo della Ceramica Florio, le « Bunkerino » de Falcone et Borsellino…)." },
+  { c: "#C79A2E", n: "Teatro Massimo + Palazzo Butera", v: "Si les deux", d: "Billet combiné 17 € valable 3 jours, au lieu de 12 € + ≈ 10 €. À prendre au Massimo." },
+  { c: "#C79A2E", n: "Oratoires Santa Cita + SS. Rosario", v: "Si oratoires", d: "6 € les deux oratoires de Serpotta (fermés le mardi)." },
+  { c: "#7B8794", n: "Circuito del Sacro", v: "Bonus", d: "Réduction de 1 € dans les églises du circuit (Martorana, San Cataldo, Santa Caterina, Casa Professa, Santa Maria della Catena). Demander à la caisse de la première église." },
+  { c: "#C24E2C", n: "Palermo Culture Pass", v: "Non", d: "25,60 €, 7 jours, mais seulement Palazzo Steri, musée Salinas, jardin botanique et Palazzo Riso : rien de votre programme." },
+  { c: "#C24E2C", n: "PMO Tourist Card", v: "Non", d: "Carte de réductions (Martorana -50 %, cathédrale -17 %, Chapelle Palatine -6 %) avec bus AMAT gratuits. Rentable seulement en enchaînant beaucoup de sites et de bus." },
+  { c: "#C24E2C", n: "Tesori Pass (festival)", v: "Non", d: "Pass nominatif à ≈ 50 € (don) les années précédentes : coupe-file sur tous les lieux et bus à 1 €. Fait pour ceux qui enchaînent 15 lieux, pas pour 3 jours." }
+];
+
+var PRICES = [
+  ["Palais des Normands + Chapelle Palatine", "lun, jeu-sam 8 h 30-16 h 30 · dim 8 h 30-12 h 30", 19],
+  ["Monreale, billet complet (option)", "Duomo, cloître, terrasses, musée", 13],
+  ["Cathédrale, toits", "lun-ven jusqu'à 14 h 30, sam 18 h, dim 13 h", 7],
+  ["San Giovanni degli Eremiti", "lun-sam 9 h-19 h", 8],
+  ["Teatro Massimo, visite guidée", "tous les jours 9 h 30-18 h", 12],
+  ["Martorana + San Cataldo", "Martorana lun-sam 10 h-13 h", 4.5],
+  ["Coupon festival", "18 € pour deux", 9]
+];
+
+function viewBillets() {
+  var tot = PRICES.reduce(function (a, p) { return a + p[2]; }, 0);
+  var nb = BUY.filter(function (b) { return bought[b.id]; }).length;
+  return '<div class="ptitle"><h1>Billets</h1><p>Ce qu\'il faut acheter, et les pass qui valent le coup</p></div><div class="tiles"></div><main class="wrap info">' +
+    '<section class="card rise"><h2>Avant de partir <em id="nbuy">' + nb + ' / ' + BUY.length + ' fait' + (nb > 1 ? "s" : "") + '</em></h2><ul class="buy">' + BUY.map(function (b) {
+      return '<li class="' + (bought[b.id] ? "done" : "") + '"><button class="dot" data-buy="' + b.id + '" aria-label="Marquer comme fait">' + CHECK + '</button>' +
+        '<div class="row"><div class="nm">' + esc(b.n) + '</div>' + (b.p ? '<span class="price">' + esc(b.p) + '</span>' : '') + '</div>' +
+        '<div class="desc">' + esc(b.d) + '</div>' + (b.u ? '<div class="meta"><a href="' + b.u + '" target="_blank" rel="noopener">Acheter ↗</a></div>' : '') + '</li>';
+    }).join("") + '</ul></section>' +
+    '<section class="card rise" style="animation-delay:.05s"><h2>Les pass <em>pas de « Florence Card » ici</em></h2>' +
+    '<p class="small muted" style="margin:0">Palerme n\'a pas de carte unique qui couvre la Chapelle Palatine, la cathédrale et Monreale. Chaque site a son billet. Voilà ce qui existe :</p>' +
+    PASSES.map(function (p) {
+      return '<div class="pass" style="--c:' + p.c + '"><b>' + esc(p.n) + '</b><span class="verdict">' + esc(p.v) + '</span><p>' + esc(p.d) + '</p></div>';
+    }).join("") +
+    '<p class="small" style="margin:12px 0 0"><b>Reco :</b> coupon festival de 10 entrées + Palais des Normands en ligne, tout le reste au guichet.</p></section>' +
+    '<section class="card rise" style="animation-delay:.1s"><h2>Budget visites <em>par personne</em></h2><table class="px">' + PRICES.map(function (p) {
+      return '<tr><td>' + esc(p[0]) + '<small>' + esc(p[1]) + '</small></td><td>' + String(p[2]).replace(".", ",") + ' €</td></tr>';
+    }).join("") + '</table><div class="tot"><span>Total, Monreale compris</span><b>≈ ' + Math.round(tot) + ' €</b></div>' +
+    '<p class="small muted" style="margin:8px 0 0">Plus 10 € de bus aéroport et 2,80 € de bus pour Monreale. Sans Monreale : ≈ ' + Math.round(tot - 13) + ' €. Gratuit le 1er dimanche du mois, mais pas le 8 novembre.</p></section>' +
+    '<p class="small muted" style="text-align:center;margin:0 0 20px">Horaires et prix : mairie de Palerme (février 2026) et leviedeitesori.com. À revérifier la veille.</p>' +
+    '</main>';
+}
+
+function viewInfos() {
+  return '<div class="ptitle"><h1>Pratique</h1><p>3 nuits au cœur de Palerme</p></div><div class="tiles"></div><main class="wrap info">' +
+    '<section class="card rise"><h3>🛏️ Logement</h3><ul><li><b>Qanat House con Terrazzo Privato</b>, à 3 min du Teatro Massimo · 248 €</li><li>Arrivée à partir de 16 h, départ avant 10 h.</li><li>À demander à l\'hôte : bagages jeudi avant 16 h et dimanche jusqu\'à 14 h.</li></ul>' +
+    '<div class="btns"><a class="btn blue" href="' + gmapsQ("Qanat House Palermo") + '" target="_blank" rel="noopener">📍 Voir sur la carte</a></div></section>' +
+    '<section class="card rise" style="animation-delay:.05s"><h3>🚌 Bouger</h3><ul><li><b>Aéroport</b> : bus Prestia e Comandè toutes les 30 min, ≈ 50 min. 6 € en ligne, 6,50 € à bord, 10 € l\'aller-retour. En ville : via Roma, Politeama, gare centrale.</li><li><b>Alternative</b> : train Trinacria Express, 6,80 €, ≈ 1 h jusqu\'à Palermo Centrale.</li><li><b>Bus AMAT</b> (ville, Monreale) : 1,40 € les 90 min, 1,80 € à bord. Appli MyAMAT ou tabac.</li><li>Tout le centre se fait à pied : 20 min du Palais des Normands à la Kalsa.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.1s"><h3>🎭 Le festival Le Vie dei Tesori</h3><ul><li>Du 9 octobre au 15 novembre, du vendredi au dimanche : vous tombez sur le 5e week-end.</li><li>Réservation des créneaux en ligne (conseillée, sinon selon les places restantes).</li><li>Centre d\'info : via Duca della Verdura 32, tous les jours 10 h-18 h · <a href="tel:+390918421273">091 842 12 73</a></li></ul>' +
+    '<div class="btns"><a class="btn" href="https://www.leviedeitesori.com/palermo/" target="_blank" rel="noopener">Programme et coupons ↗</a></div></section>' +
+    '<section class="card rise" style="animation-delay:.15s"><h3>🍋 À goûter</h3><ul><li><b>Arancina</b> : boule de riz frite (ragù, beurre-jambon). Au féminin à Palerme !</li><li><b>Pane e panelle</b> : beignets de pois chiches dans un pain au sésame.</li><li><b>Sfincione</b> : pizza épaisse tomate, oignon, anchois, caciocavallo.</li><li><b>Cannolo</b> : à remplir minute, sinon il ramollit.</li><li><b>Pani ca\' meusa</b> : pain à la rate et au poumon. Pour les curieux.</li><li><b>Brioche con gelato</b> : glace dans une brioche, même en novembre.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.2s"><h3>⚠️ Bon à savoir</h3><ul><li>Épaules et genoux couverts dans les églises.</li><li>Pickpockets dans les marchés : sac devant.</li><li>Nuit vers 17 h : caser les visites en plein air tôt.</li><li>Dîner à partir de 20 h, réserver le samedi soir.</li><li>Urgences : <b>112</b>.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.25s"><h3>🇮🇹 Trois mots</h3><ul><li><b>Buongiorno / Buonasera</b> : bonjour / bonsoir (dès 15 h)</li><li><b>Il conto, per favore</b> : l\'addition</li><li><b>Una per uno</b> : une chacun</li><li><b>Quanto costa ?</b> : combien ?</li></ul></section>' +
+    '<section class="card"><h3>✅ Progression</h3><p class="muted" style="margin:0 0 10px">' + countVu() + '</p><button class="btn ghost" id="resetvu">Tout décocher</button></section>' +
+    '</main>';
+}
+function countVu() {
+  var tot = 0, ok = 0;
+  DAYS.forEach(function (d) { d.stops.forEach(function (s, k) { if (s.t === "log") return; tot++; if (vu[d.date + "-" + k]) ok++; }); });
+  return ok + " endroit" + (ok > 1 ? "s" : "") + " coché" + (ok > 1 ? "s" : "") + " sur " + tot + ".";
+}
+
+var DCOL = ["#C24E2C", "#2C5AA0", "#5E7A3A", "#7A3E6B"];
+function viewCarte() {
+  return '<div class="fullmap" id="bigmap"></div><div class="maplegend"><b>Palerme en 4 jours</b><div class="lg">' + DAYS.map(function (d, i) {
+    return '<span><i style="background:' + DCOL[i] + '"></i>' + fmtShortDay(d.date) + ' ' + dayNum(d.date) + '</span>';
+  }).join("") + '</div></div>';
+}
+
+/* ============ CARTES (Leaflet + OpenStreetMap) ============ */
+function clearMaps() { maps.forEach(function (m) { m.remove(); }); maps = []; }
+function tiles(m) {
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(m);
+}
+function pin(label, col) {
+  return L.divIcon({ className: "", html: '<div class="pin" style="background:' + col + '"><span>' + label + '</span></div>', iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26] });
+}
+function homeMarker(m) {
+  L.marker(P.home, { icon: pin("🏠", "#26211C") }).addTo(m).bindPopup("<b>Qanat House</b><br>votre logement");
+}
+function initMiniMap() {
+  if (!window.L) return;
+  var el = document.getElementById("mmap"); if (!el) return;
+  var d = DAYS[st.i];
+  var m = L.map(el, { zoomControl: false, attributionControl: false, scrollWheelZoom: false });
+  tiles(m); maps.push(m);
+  homeMarker(m);
+  var pts = [P.home];
+  d.stops.forEach(function (s, k) {
+    if (!s.c || s.t === "log") return;
+    L.marker(s.c, { icon: pin(k + 1, TAGS[s.t].c) }).addTo(m)
+      .bindPopup("<b>" + esc(s.n) + "</b><br><a href='" + stopLink(s) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
+    pts.push(s.c);
+  });
+  m.fitBounds(L.latLngBounds(pts), { padding: [26, 26] });
+}
+function initBigMap() {
+  if (!window.L) { document.getElementById("bigmap").innerHTML = '<p style="padding:90px 20px">Carte indisponible hors ligne.</p>'; return; }
+  var m = L.map("bigmap", { zoomControl: false });
+  tiles(m); maps.push(m);
+  L.control.zoom({ position: "bottomright" }).addTo(m);
+  homeMarker(m);
+  var pts = [P.home];
+  DAYS.forEach(function (d, i) {
+    d.stops.forEach(function (s) {
+      if (!s.c || s.t === "log") return;
+      L.marker(s.c, { icon: pin(dayNum(d.date), DCOL[i]) }).addTo(m)
+        .bindPopup("<b>" + esc(s.n) + "</b><br>" + fmtLong(d.date) + "<br><a class='pbtn' href='#' data-goday='" + i + "'>Voir le jour</a>");
+      if (s.c[1] > 13.33) pts.push(s.c);
+    });
+  });
+  m.fitBounds(L.latLngBounds(pts), { padding: [30, 30], paddingTopLeft: [30, 100] });
+}
+
+/* ============ RENDU & EVENEMENTS ============ */
+function render() {
+  clearMaps();
+  var app = document.getElementById("app");
+  if (st.tab === "jour") app.innerHTML = viewDay();
+  else if (st.tab === "billets") app.innerHTML = viewBillets();
+  else if (st.tab === "infos") app.innerHTML = viewInfos();
+  else app.innerHTML = viewCarte();
+  renderNav();
+  if (st.tab === "jour") {
+    setTimeout(initMiniMap, 30);
+    var on = document.querySelector(".chip.on");
+    if (on) on.parentNode.scrollLeft = on.offsetLeft - 14;
+  }
+  if (st.tab === "carte") setTimeout(initBigMap, 30);
+}
+function goDay(i) {
+  st.i = i; st.tab = "jour"; LS.set("pa-day", i); LS.set("pa-tab", "jour");
+  render(); window.scrollTo(0, 0);
+}
+
+document.addEventListener("click", function (e) {
+  var t = e.target.closest("[data-day],[data-goday],[data-tab],[data-vu],[data-buy],#refresh,#resetvu");
+  if (!t) return;
+  if (t.dataset.vu) {
+    var id = t.dataset.vu;
+    if (vu[id]) delete vu[id]; else vu[id] = 1;
+    LS.set("pa-vu", vu);
+    t.parentNode.classList.toggle("done", !!vu[id]);
+    return;
+  }
+  if (t.dataset.buy) {
+    var b = t.dataset.buy;
+    if (bought[b]) delete bought[b]; else bought[b] = 1;
+    LS.set("pa-buy", bought);
+    t.parentNode.classList.toggle("done", !!bought[b]);
+    var nb = BUY.filter(function (x) { return bought[x.id]; }).length;
+    document.getElementById("nbuy").textContent = nb + " / " + BUY.length + " fait" + (nb > 1 ? "s" : "");
+    return;
+  }
+  if (t.dataset.day != null) { goDay(+t.dataset.day); return; }
+  if (t.dataset.goday != null) { e.preventDefault(); goDay(+t.dataset.goday); return; }
+  if (t.dataset.tab) { st.tab = t.dataset.tab; LS.set("pa-tab", st.tab); render(); window.scrollTo(0, 0); return; }
+  if (t.id === "refresh") { t.textContent = "Chargement…"; loadWx(true); return; }
+  if (t.id === "resetvu" && confirm("Décocher tous les endroits ?")) { vu = {}; LS.set("pa-vu", vu); render(); }
+});
+document.addEventListener("input", function (e) {
+  if (e.target.id === "note") { notes[DAYS[st.i].date] = e.target.value; LS.set("pa-notes", notes); }
+});
+
+render();
+loadWx();
+if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) {
+  navigator.serviceWorker.register("service-worker.js").catch(function () {});
+}
+</script>
+</body>
+</html>
