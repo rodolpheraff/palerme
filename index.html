@@ -188,6 +188,8 @@ table.px small{display:block;color:var(--ink2);font-size:12px}
 .buspin{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:#fff;border:2.5px solid var(--deep);box-shadow:0 3px 8px rgba(0,0,0,.3);font-size:15px}
 .rpin{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.3);font-size:14px}
 .mpin{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#fff;border:2.5px solid var(--orange);box-shadow:0 3px 8px rgba(0,0,0,.3);font-size:16px}
+.ara{width:1.15em;height:1.15em;vertical-align:-.2em;display:inline-block}
+.rpin .ara{width:18px;height:18px}
 .flts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .flt{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font:600 12.5px var(--body);color:var(--ink);cursor:pointer}
 .flt i{width:10px;height:10px;border-radius:50%;background:var(--c)}
@@ -656,7 +658,7 @@ function viewCarte() {
   return '<div class="fullmap" id="bigmap"></div><div class="maplegend"><b>Palerme en 4 jours</b><div class="flts">' + DAYS.map(function (d, i) {
     return '<button class="flt' + (flt.d[i] ? "" : " off") + '" data-flt="' + i + '" style="--c:' + DCOL[i] + '"><i></i>' + fmtShortDay(d.date) + ' ' + dayNum(d.date) + '</button>';
   }).join("") + '<button class="flt' + (flt.m ? "" : " off") + '" data-flt="m">🧺 Marchés</button><button class="flt' + (flt.r ? "" : " off") + '" data-flt="r">🍷 Restos</button></div>' +
-    '<div class="lgx">🏠 logement · 🚌 bus · Restos : 🧆 street food · 🍴 midi rapide · 🍝 pâtes · 🍷 bar à vin · 🍕 pizza</div></div>';
+    '<div class="lgx">🏠 logement · 🚌 bus · Restos : ' + RICON.street + ' street food · 🍴 midi rapide · 🍝 pâtes · 🍷 bar à vin · 🍕 pizza</div></div>';
 }
 function setFlt(k) {
   if (k === "r" || k === "m") flt[k] = flt[k] ? 0 : 1; else flt.d[+k] = flt.d[+k] ? 0 : 1;
@@ -677,7 +679,7 @@ var MARKETS = [
   { n: "Vucciria", w: "Le soir", d: "L'ancien marché devenu le quartier de l'apéro : grillades de rue, stigghiola.", c: [38.1189, 13.3648], q: "Piazza Caracciolo Vucciria Palermo" },
   { n: "Borgo Vecchio", w: "Le soir", d: "Le plus populaire, derrière le port : barbecues sur le trottoir.", c: [38.1268, 13.3572], q: "Borgo Vecchio Palermo" }
 ];
-var RICON = { street: "🧆", midi: "🍴", pates: "🍝", vin: "🍷", pizza: "🍕" };
+var RICON = { street: '<svg class="ara" viewBox="0 0 24 24"><path d="M12 2.5C8 7 5.5 11 5.5 15a6.5 6.5 0 0 0 13 0c0-4-2.5-8-6.5-12.5z" fill="#E3A53C" stroke="#9A5B16" stroke-width="1.3"/><g fill="#A9661B"><circle cx="10" cy="13" r=".9"/><circle cx="13.6" cy="11" r=".8"/><circle cx="14.2" cy="16" r=".9"/><circle cx="10.4" cy="17.6" r=".8"/><circle cx="12" cy="7.6" r=".7"/></g></svg>', midi: "🍴", pates: "🍝", vin: "🍷", pizza: "🍕" };
 function stopLabel(s, n) { return s.t === "mar" ? "🧺" : n; }
 function pin(label, col) {
   return L.divIcon({ className: "", html: '<div class="pin" style="background:' + col + '"><span>' + label + '</span></div>', iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26] });
