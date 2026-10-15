@@ -257,6 +257,7 @@ var DAYS = [
       { n: "Fontana Pretoria", t: "mon", d: "La « fontaine de la honte » et ses statues nues, à deux pas des Quattro Canti. Belle éclairée le soir.", q: "Fontana Pretoria Palermo", c: [38.1151, 13.3624] },
       { n: "Soirée à la Vucciria", t: "soir", d: "L'ancien marché devenu le quartier de l'apéro : stigghiola et grillades de rue, babbaluci, bières à 2 €, verre de moscato à la Taverna Azzurra. Piazza Caracciolo et les ruelles autour.", q: "Piazza Caracciolo Vucciria Palermo", c: [38.1189, 13.3648] }
     ],
+    rs: [["Osteria Dadalìa", "midi tardif"], ["Frida", "soir"], ["Taverna Azzurra", "un verre"]],
     eat: "Midi tardif chez Dadalìa. Le soir, fatigués du voyage : pizza chez Frida, à 2 min du logement. Détails dans l'onglet Restos.",
     tip: "Billet de bus aéroport acheté en ligne : 6 € (aller-retour 10 €) au lieu de 6,50 € à bord. Garder le QR code pour le retour."
   },
@@ -274,6 +275,7 @@ var DAYS = [
       { n: "Palazzo Costantino", t: "fest", r: 1, f: "costantino", d: "Festival. Le palais d'angle des Quattro Canti, d'habitude fermé, et sa grande fresque de Velasco. Ouvert tard : idéal à la nuit tombée.", h: "Ven 11 h 30-21 h · 30 min · créneau de 17 h", u: "https://www.leviedeitesori.com/directory-festival/listing/62-palazzo-costantino/", q: "Palazzo Costantino Quattro Canti Palermo", c: [38.1160, 13.3618] },
       { n: "Borgo Vecchio le soir", t: "soir", d: "Le marché populaire derrière le port s'anime le soir : barbecues de rue, musique, très palermitain.", q: "Borgo Vecchio Palermo", c: [38.1268, 13.3572] }
     ],
+    rs: [["Pasticceria Cappello", "pause après le Palais"], ["Nino u Ballerino", "midi, variante du Capo"], ["Vinoveritas", "apéro"], ["Corona Trattoria", "dîner, réserver"], ["Enoteca Picone", "dernier verre"]],
     eat: "Midi debout au Capo. Le soir : verre chez Vinoveritas, pâtes chez Corona Trattoria (réserver), dernier verre chez Picone, tout dans le même quartier.",
     tip: "Tenue couverte (épaules, genoux) pour la chapelle et la cathédrale. Les billets du Palais en ligne évitent la queue au guichet."
   },
@@ -290,6 +292,7 @@ var DAYS = [
       { n: "Oratoire de San Lorenzo", t: "fest", o: 1, f: "lorenzo", d: "Festival, avec le plan B. Le chef-d'œuvre de Serpotta, et la copie de la Nativité du Caravage volée en 1969 (jamais retrouvée).", h: "Sam 10 h-17 h 30 · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/55-oratorio-di-san-lorenzo/", q: "Oratorio di San Lorenzo Palermo", c: [38.1166, 13.3665] },
       { n: "Opera dei Pupi", t: "soir", o: 1, d: "Spectacle de marionnettes siciliennes (chevaliers de Charlemagne), classé par l'Unesco. Horaires sur les sites du Museo delle Marionette ou du Teatro Cuticchio.", h: "≈ 10 €", q: "Museo internazionale delle Marionette Antonio Pasqualino Palermo", c: [38.1176, 13.3700] }
     ],
+    rs: [["Friggitoria Chiluzzu", "si Kalsa"], ["Bar Touring", "si Kalsa"], ["Cicala", "apéro"], ["Ojdå", "apéro si Kalsa"], ["Cagliostro", "pizza"], ["Archestrato di Gela", "pizza, taxi, réserver"]],
     eat: "Midi street food à Ballarò, cannoli à Santa Caterina. Le soir : vins nature chez Cicala, puis pizza chez Cagliostro ou Archestrato di Gela (taxi, réserver).",
     tip: "Monreale ou la Kalsa : décider le matin selon la météo et la fatigue. Monreale prend la demi-journée aller-retour."
   },
@@ -310,6 +313,7 @@ var DAYS = [
       { n: "Cathédrale (zone monumentale)", t: "mon", o: 1, d: "Si vous ne l'avez pas faite vendredi : ouverte le dimanche 9 h-13 h.", h: "Dim 9 h-13 h", q: "Cattedrale di Palermo", c: [38.1145, 13.3561] },
       { n: "Bus pour l'aéroport", t: "log", d: "Arrêt « Via Roma 289 », devant la Rinascente, à 7 min à pied du logement. Le bus part de la gare à 14 h 30 et passe ici ≈ 5 min après. Guichet sur place jusqu'à 17 h 30.", h: "Passage ≈ 14 h 35 · aéroport ≈ 15 h 20", q: "Rinascente Via Roma 289 Palermo", c: P.busOut }
     ],
+    rs: [["Ai Cascinari", "midi 12 h 30"], ["Osteria Dadalìa", "plan B, service continu"]],
     eat: "Déjeuner à 12 h 30 chez Ai Cascinari (timballes de pâtes), sacs repris à 14 h, bus à 14 h 35.",
     tip: "Pas de consigne trouvée chez l'hôte ? Il y a des consignes à bagages en ville (Stow Your Bags, Radical Storage), réservables en ligne."
   }
@@ -423,6 +427,15 @@ function stopList(d) {
   }).join("") + '</ul>';
 }
 
+function restoByName(n) { return RESTOS.filter(function (r) { return r.n === n; })[0]; }
+function dayRestos(d) {
+  return '<div>' + (d.rs || []).map(function (x) {
+    var r = restoByName(x[0]); if (!r) return "";
+    return '<div class="rest"><div class="row"><div class="nm">' + RICON[r.g] + ' ' + esc(r.n) + '</div><span class="kind">' + esc(x[1]) + '</span></div>' +
+      '<div class="meta"><span>🕘 ' + esc(r.h) + '</span><a href="' + gmapsQ(r.q) + '" target="_blank" rel="noopener">Itinéraire ↗</a>' + (r.tel ? '<a href="tel:' + r.tel + '">Appeler</a>' : '') + '</div></div>';
+  }).join("") + '</div>';
+}
+
 function viewDay() {
   var d = DAYS[st.i], t = todayStr(), cd = "";
   var diff = Math.round((dObj(DAYS[0].date) - dObj(t)) / 86400000);
@@ -442,7 +455,8 @@ function viewDay() {
       return '<li><span>' + l[0] + '</span><span class="h">' + esc(l[1]) + '</span><span>' + esc(l[2]) + '</span></li>';
     }).join("") + '</ul></section>' : '') +
     '<section class="card rise" style="animation-delay:.1s"><h2>Le programme <em>à cocher une fois vu</em></h2>' + stopList(d) + '</section>' +
-    '<div class="duo rise" style="animation-delay:.15s"><div class="card mini"><h3>🍽️ Manger</h3><p>' + esc(d.eat) + '</p></div><div class="card mini"><h3>💡 Astuce</h3><p>' + esc(d.tip) + '</p></div></div>' +
+    '<section class="card rise" style="animation-delay:.15s"><h2>Où manger <em>dans le coin ce jour-là</em></h2><p class="small muted" style="margin:0 0 4px">' + esc(d.eat) + '</p>' + dayRestos(d) + '</section>' +
+    '<section class="card mini rise" style="animation-delay:.18s"><h3>💡 Astuce</h3><p>' + esc(d.tip) + '</p></section>' +
     '<section class="card rise" style="animation-delay:.2s"><h2>Carte du jour</h2><div class="mmap" id="mmap"></div></section>' +
     '<section class="card"><h2>Nos notes</h2><textarea id="note" placeholder="Créneaux réservés, lieux du festival choisis, resto repéré…">' + esc(notes[d.date] || "") + '</textarea></section>' +
     '<div class="btns" style="justify-content:space-between;margin:4px 0 20px">' +
@@ -681,6 +695,11 @@ function initMiniMap() {
     L.marker(s.c, { icon: pin(stopLabel(s, n), TAGS[s.t].c) }).addTo(m)
       .bindPopup("<b>" + esc(s.n) + "</b><br><a href='" + stopLink(s) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
     pts.push(s.c);
+  });
+  (d.rs || []).forEach(function (x) {
+    var r = restoByName(x[0]); if (!r) return;
+    L.marker(r.c, { icon: L.divIcon({ className: "", html: '<div class="rpin">' + RICON[r.g] + '</div>', iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] }) }).addTo(m)
+      .bindPopup("<b>" + esc(r.n) + "</b><br>" + esc(x[1]) + "<br><a href='" + gmapsQ(r.q) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
   });
   m.fitBounds(L.latLngBounds(pts), { padding: [26, 26] });
 }

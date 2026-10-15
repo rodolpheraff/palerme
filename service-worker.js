@@ -1,4 +1,4 @@
-var VERSION = "v5";
+var VERSION = "v6";
 var CACHE = "palerme-" + VERSION;
 var TILES = "palerme-tiles";
 var ASSETS = [
