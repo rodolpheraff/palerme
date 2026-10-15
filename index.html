@@ -186,7 +186,12 @@ table.px small{display:block;color:var(--ink2);font-size:12px}
 /* reperes speciaux */
 .homepin{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--gold);border:3px solid #fff;box-shadow:0 0 0 3px var(--gold),0 6px 14px rgba(0,0,0,.35);font-size:20px}
 .buspin{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:#fff;border:2.5px solid var(--deep);box-shadow:0 3px 8px rgba(0,0,0,.3);font-size:15px}
-.rpin{width:14px;height:14px;border-radius:50%;background:#8E2B3A;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35)}
+.rpin{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.3);font-size:14px}
+.flts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.flt{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font:600 12.5px var(--body);color:var(--ink);cursor:pointer}
+.flt i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.flt.off{opacity:.4;text-decoration:line-through}
+.lgx{margin-top:6px;font-size:12px;color:var(--ink2)}
 .leaflet-tooltip.lbl{background:var(--ink);color:#fff;border:0;border-radius:6px;font:700 11px var(--body);padding:2px 7px;box-shadow:none}
 .leaflet-tooltip.lbl::before{display:none}
 .leaflet-tooltip.lbl.home{background:var(--gold)}
@@ -229,7 +234,6 @@ var P = {
 var TAGS = {
   mon: { l: "Monument", c: "#2C5AA0" },
   mar: { l: "Marché", c: "#C24E2C" },
-  food: { l: "À goûter", c: "#E07A22" },
   fest: { l: "Festival", c: "#C79A2E" },
   bal: { l: "Balade", c: "#5E7A3A" },
   soir: { l: "Le soir", c: "#7A3E6B" },
@@ -243,11 +247,10 @@ var DAYS = [
       ["✈️", "12 h 45", "Atterrissage à Palerme Falcone-Borsellino (Punta Raisi)."],
       ["🚌", "13 h 05", "Bus Prestia e Comandè devant les arrivées (départs 13 h 05 ou 13 h 35). Descendre à l'arrêt « Via Roma 265 (Vucciria) », ≈ 45 min."],
       ["🚶", "≈ 14 h", "Logement à 6 min à pied de l'arrêt (450 m). Bagages à déposer si l'hôte accepte."],
-      ["🍝", "14 h 30", "Déjeuner tardif : l'Osteria Dadalìa sert en continu, à 2 min de l'arrêt de bus."],
+      ["🍝", "14 h 30", "Déjeuner tardif : idées dans l'onglet Restos (cuisines qui servent encore après 14 h)."],
       ["🛏️", "16 h", "Arrivée au Qanat House (terrasse privée), à 3 min du Teatro Massimo."]
     ],
     stops: [
-      { n: "Déjeuner à l'Osteria Dadalìa", t: "food", d: "Dans la Vucciria, à 2 min de l'arrêt de bus, cuisine ouverte en continu : pasta con le sarde, caponata, panelle. Ou juste une arancina (au féminin à Palerme) en marchant.", h: "Tous les jours 11 h 30-23 h 30", q: "Osteria Dadalia Palermo", c: [38.1178, 13.3636] },
       { n: "Installation au Qanat House", t: "log", d: "Check-in à partir de 16 h. Profiter de la terrasse pour le coucher du soleil (vers 17 h en novembre).", q: "Qanat House Palermo", c: P.home },
       { n: "Teatro Massimo", t: "mon", o: 1, d: "Le plus grand opéra d'Italie, à 3 min du logement. Visite guidée de 30 min (salle, loge royale, salle pompéienne), dernier départ 17 h 20 : on peut la caser dès ce soir.", h: "9 h 30-18 h · 12 € (combiné avec Palazzo Butera : 17 €)", q: "Teatro Massimo Palermo", c: P.massimo },
       { n: "Via Maqueda & Quattro Canti", t: "bal", d: "Rue piétonne qui coupe la vieille ville en deux. Au croisement avec via Vittorio Emanuele, les Quattro Canti et leurs quatre façades baroques.", q: "Quattro Canti Palermo", c: [38.1158, 13.3616] },
@@ -262,7 +265,6 @@ var DAYS = [
     alert: { h: "Le jour des grosses visites", b: "Vendredi, moins de monde que le week-end. Palais des Normands à l'ouverture (8 h 30) avant les groupes, puis la cathédrale : ses toits ferment à 14 h 30 en semaine." },
     stops: [
       { n: "Palais des Normands & Chapelle Palatine", t: "mon", r: 1, d: "La chapelle aux mosaïques d'or byzantines sous un plafond de bois sculpté arabe : le chef-d'œuvre de Palerme. Billet avec les appartements royaux, les jardins et la zone archéologique. Compter 2 h.", h: "Ven 8 h 30-16 h 30 · 19 € · créneau réservé en ligne", u: "https://federicosecondoonline.tm.vivaticket.com", c: [38.1108, 13.3532] },
-      { n: "Pause setteveli chez Cappello", t: "food", o: 1, d: "À 500 m du Palais : la pâtisserie de quartier qui a inventé la setteveli, cannoli remplis minute. Café debout au comptoir.", a: "", q: "Pasticceria Cappello Via Colonna Rotta Palermo", c: [38.11214, 13.35025] },
       { n: "San Giovanni degli Eremiti", t: "mon", d: "À 300 m du palais : coupoles rouges, cloître et jardin d'orangers. 30 min, parfait entre deux grosses visites.", h: "Lun-sam 9 h-19 h · 8 €", q: "San Giovanni degli Eremiti Palermo", c: [38.1097, 13.3536] },
       { n: "Cathédrale & ses toits", t: "mon", d: "Entrée de la cathédrale gratuite. La zone monumentale (trésor, crypte, tombeaux royaux) et surtout la promenade sur les toits sont payantes : vue sur toute la ville.", h: "Toits lun-ven 9 h 30-14 h 30 · billet 1 à 18 € selon le parcours (toits ≈ 7 €)", u: "https://ticket-shop-cattedraledipalermo.it", c: [38.1145, 13.3561] },
       { n: "Marché du Capo", t: "mar", d: "Juste derrière la cathédrale. Déjeuner debout : polpo bollito au citron, pane e panelle, sfincione, stigghiola du grilleur de via Porta Carini. Variante : le pani ca' meusa de Nino u Ballerino, à 5 min. Le marché tourne surtout le matin et en début d'après-midi.", h: "Lun-sam dès 7 h 30, le plus animé le matin", q: "Mercato del Capo Palermo", c: [38.1191, 13.3554] },
@@ -282,7 +284,7 @@ var DAYS = [
       { n: "Crypte de Sant'Orsola", t: "fest", o: 1, f: "orsola", d: "Festival. À deux pas de Ballarò, la crypte de la confrérie de la Mort où Serpotta a sculpté squelettes et allégories. Court et saisissant.", h: "Sam 10 h-17 h 30 · 20 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/34-cripta-delloratorio-della-morte-in-santorsola/", q: "Oratorio della Morte Sant'Orsola Via Maqueda 102 Palermo", c: [38.1135, 13.3612] },
       { n: "La Martorana", t: "mon", d: "Mosaïques byzantines du XIIe siècle, piazza Bellini. Ouverte seulement le matin, et le dimanche uniquement pour la messe : samedi matin, c'est le bon créneau.", h: "Lun-sam 10 h-13 h · 2 €", q: "Chiesa della Martorana Palermo", c: [38.1148, 13.3630] },
       { n: "San Cataldo", t: "mon", d: "Juste à côté : petite église normande aux trois coupoles rouges, intérieur nu de pierre. 15 min.", h: "Tous les jours 9 h-17 h · 2,50 €", q: "Chiesa di San Cataldo Palermo", c: [38.1146, 13.3625] },
-      { n: "Santa Caterina & I Segreti del Chiostro", t: "food", d: "Église baroque de marbres polychromes, et dans le couvent la pâtisserie qui refait les douceurs des sœurs : cannoli remplis minute, frutta martorana.", h: "Église 9 h-17 h · 3 €", q: "I Segreti del Chiostro Palermo", c: [38.1153, 13.3627] },
+      { n: "Santa Caterina d'Alessandria", t: "mon", d: "Église baroque entièrement couverte de marbres polychromes, cloître et terrasses sur le toit, juste à côté de la Martorana.", h: "Église 9 h-17 h · 3 €", q: "I Segreti del Chiostro Palermo", c: [38.1153, 13.3627] },
       { n: "Monreale", t: "mon", o: 1, d: "Le Duomo et ses 6 400 m² de mosaïques d'or, le cloître aux 228 colonnes, les terrasses. Y aller : bus AMAT 389 depuis piazza Indipendenza (≈ 40 min, ticket 1,40 €, 1,80 € à bord). La ligne a été coupée plusieurs fois : vérifier sur l'appli MyAMAT la veille, sinon taxi.", h: "Duomo sam 9 h-12 h 45 / 14 h-16 h 45 · cloître jusqu'à 18 h 30 · billet complet 13 €", q: "Duomo di Monreale", c: [38.0815, 13.2924] },
       { n: "Plan B si pas Monreale : la Kalsa", t: "bal", o: 1, d: "Panelle chez Chiluzzu (piazza della Kalsa), Palazzo Abatellis (le « Triomphe de la Mort », 10 €, jusqu'à 19 h), Santa Maria dello Spasimo (église sans toit), arancina géante au Bar Touring, puis la terrasse du Palazzo Butera (≈ 10 €) et les remparts du Foro Italico au coucher du soleil.", q: "Palazzo Abatellis Palermo", c: [38.1170, 13.3719] },
       { n: "Oratoire de San Lorenzo", t: "fest", o: 1, f: "lorenzo", d: "Festival, avec le plan B. Le chef-d'œuvre de Serpotta, et la copie de la Nativité du Caravage volée en 1969 (jamais retrouvée).", h: "Sam 10 h-17 h 30 · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/55-oratorio-di-san-lorenzo/", q: "Oratorio di San Lorenzo Palermo", c: [38.1166, 13.3665] },
@@ -306,7 +308,6 @@ var DAYS = [
       { n: "Palazzo Oneto di Sperlinga", t: "fest", o: 1, f: "oneto", d: "Festival. Demeure du XVIIIe tout juste restaurée, sur le chemin du retour.", h: "Dim 10 h-18 h · 30 min · 3 € à l'entrée", u: "https://www.leviedeitesori.com/directory-festival/listing/05-palazzo-oneto/", q: "Palazzo Oneto di Sperlinga Palermo", c: [38.1192, 13.3620] },
       { n: "Catacombes des Capucins", t: "mon", o: 1, d: "À la place des oratoires si vous préférez : 8 000 momies habillées alignées dans les couloirs. Saisissant, pas pour tout le monde. Excentré (15 min de taxi).", h: "Tous les jours 9 h-12 h 30 · 5 €", q: "Catacombe dei Cappuccini Palermo", c: [38.1120, 13.3389] },
       { n: "Cathédrale (zone monumentale)", t: "mon", o: 1, d: "Si vous ne l'avez pas faite vendredi : ouverte le dimanche 9 h-13 h.", h: "Dim 9 h-13 h", q: "Cattedrale di Palermo", c: [38.1145, 13.3561] },
-      { n: "Dernier déjeuner", t: "food", d: "Ai Cascinari, la trattoria des timballes de pâtes (ouverte le dimanche midi, à 10 min du logement), ou Dadalìa sur le chemin du bus.", h: "Ai Cascinari dim 12 h 30-14 h 30", q: "Trattoria Ai Cascinari Palermo", c: [38.1155, 13.34995] },
       { n: "Bus pour l'aéroport", t: "log", d: "Arrêt « Via Roma 289 », devant la Rinascente, à 7 min à pied du logement. Le bus part de la gare à 14 h 30 et passe ici ≈ 5 min après. Guichet sur place jusqu'à 17 h 30.", h: "Passage ≈ 14 h 35 · aéroport ≈ 15 h 20", q: "Rinascente Via Roma 289 Palermo", c: P.busOut }
     ],
     eat: "Déjeuner à 12 h 30 chez Ai Cascinari (timballes de pâtes), sacs repris à 14 h, bus à 14 h 35.",
@@ -598,7 +599,7 @@ function viewRestos() {
           '<div class="meta"><span>📍 ' + esc(r.a) + '</span><a href="' + gmapsQ(r.q) + '" target="_blank" rel="noopener">Itinéraire ↗</a>' + (r.tel ? '<a href="tel:' + r.tel + '">Appeler</a>' : '') + '</div></div>';
       }).join("") + '</section>';
     }).join("") +
-    '<p class="small muted" style="text-align:center;margin:0 0 20px">Les restos sont aussi sur la carte (points bordeaux).</p></main>';
+    '<p class="small muted" style="text-align:center;margin:0 0 20px">Les restos sont aussi sur la carte : bouton « Restos » en haut de la carte.</p></main>';
 }
 
 function viewInfos() {
@@ -621,17 +622,29 @@ function countVu() {
 }
 
 var DCOL = ["#C24E2C", "#2C5AA0", "#5E7A3A", "#7A3E6B"];
+var flt = LS.get("pa-flt", { d: [1, 1, 1, 1], r: 0 });
+var BIG = null;
 function viewCarte() {
-  return '<div class="fullmap" id="bigmap"></div><div class="maplegend"><b>Palerme en 4 jours</b><div class="lg">' + DAYS.map(function (d, i) {
-    return '<span><i style="background:' + DCOL[i] + '"></i>' + fmtShortDay(d.date) + ' ' + dayNum(d.date) + '</span>';
-  }).join("") + '<span>🏠 logement</span><span>🚌 bus</span><span><i style="background:#8E2B3A"></i>restos</span></div></div>';
+  return '<div class="fullmap" id="bigmap"></div><div class="maplegend"><b>Palerme en 4 jours</b><div class="flts">' + DAYS.map(function (d, i) {
+    return '<button class="flt' + (flt.d[i] ? "" : " off") + '" data-flt="' + i + '" style="--c:' + DCOL[i] + '"><i></i>' + fmtShortDay(d.date) + ' ' + dayNum(d.date) + '</button>';
+  }).join("") + '<button class="flt' + (flt.r ? "" : " off") + '" data-flt="r">🍷 Restos</button></div>' +
+    '<div class="lgx">🏠 logement · 🚌 bus · 🧺 marché · touchez un filtre pour l\'afficher ou le masquer</div></div>';
+}
+function setFlt(k) {
+  if (k === "r") flt.r = flt.r ? 0 : 1; else flt.d[+k] = flt.d[+k] ? 0 : 1;
+  LS.set("pa-flt", flt);
+  if (!BIG) return;
+  var on = k === "r" ? flt.r : flt.d[+k], lay = k === "r" ? BIG.r : BIG.d[+k];
+  if (on) BIG.m.addLayer(lay); else BIG.m.removeLayer(lay);
 }
 
 /* ============ CARTES (Leaflet + OpenStreetMap) ============ */
-function clearMaps() { maps.forEach(function (m) { m.remove(); }); maps = []; }
+function clearMaps() { maps.forEach(function (m) { m.remove(); }); maps = []; BIG = null; }
 function tiles(m) {
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(m);
 }
+var RICON = { street: "🧆", midi: "🍴", pates: "🍝", vin: "🍷", pizza: "🍕" };
+function stopLabel(s, n) { return s.t === "mar" ? "🧺" : n; }
 function pin(label, col) {
   return L.divIcon({ className: "", html: '<div class="pin" style="background:' + col + '"><span>' + label + '</span></div>', iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26] });
 }
@@ -661,9 +674,11 @@ function initMiniMap() {
   var pts = [P.home];
   if (st.i === 0) { busMarkers(m, "in"); pts.push(P.busIn); }
   if (st.i === DAYS.length - 1) { busMarkers(m, "out"); pts.push(P.busOut); }
-  d.stops.forEach(function (s, k) {
+  var n = 0;
+  d.stops.forEach(function (s) {
     if (!s.c || s.t === "log") return;
-    L.marker(s.c, { icon: pin(k + 1, TAGS[s.t].c) }).addTo(m)
+    n++;
+    L.marker(s.c, { icon: pin(stopLabel(s, n), TAGS[s.t].c) }).addTo(m)
       .bindPopup("<b>" + esc(s.n) + "</b><br><a href='" + stopLink(s) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
     pts.push(s.c);
   });
@@ -677,18 +692,21 @@ function initBigMap() {
   L.control.zoom({ position: "bottomright" }).addTo(m);
   homeMarker(m);
   busMarkers(m);
+  BIG = { m: m, d: [], r: L.layerGroup() };
   RESTOS.forEach(function (r) {
-    L.marker(r.c, { icon: L.divIcon({ className: "", html: '<div class="rpin"></div>', iconSize: [14, 14], iconAnchor: [7, 7] }) }).addTo(m)
+    L.marker(r.c, { icon: L.divIcon({ className: "", html: '<div class="rpin">' + RICON[r.g] + '</div>', iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] }) }).addTo(BIG.r)
       .bindPopup("<b>" + esc(r.n) + "</b><br>" + esc(r.h) + "<br><a href='" + gmapsQ(r.q) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
   });
-  var pts = [P.home];
+  if (flt.r) BIG.r.addTo(m);
   DAYS.forEach(function (d, i) {
+    var g = L.layerGroup();
     d.stops.forEach(function (s) {
       if (!s.c || s.t === "log") return;
-      L.marker(s.c, { icon: pin(dayNum(d.date), DCOL[i]) }).addTo(m)
+      L.marker(s.c, { icon: pin(stopLabel(s, dayNum(d.date)), DCOL[i]) }).addTo(g)
         .bindPopup("<b>" + esc(s.n) + "</b><br>" + fmtLong(d.date) + "<br><a class='pbtn' href='#' data-goday='" + i + "'>Voir le jour</a>");
-      if (s.c[1] > 13.33) pts.push(s.c);
     });
+    BIG.d.push(g);
+    if (flt.d[i]) g.addTo(m);
   });
   m.setView([38.1178, 13.3615], 15);
 }
@@ -717,8 +735,9 @@ function goDay(i) {
 }
 
 document.addEventListener("click", function (e) {
-  var t = e.target.closest("[data-day],[data-goday],[data-tab],[data-vu],[data-buy],#refresh,#resetvu");
+  var t = e.target.closest("[data-day],[data-goday],[data-tab],[data-vu],[data-buy],[data-flt],#refresh,#resetvu");
   if (!t) return;
+  if (t.dataset.flt != null) { setFlt(t.dataset.flt); t.classList.toggle("off"); return; }
   if (t.dataset.vu) {
     var id = t.dataset.vu;
     if (vu[id]) delete vu[id]; else vu[id] = 1;
